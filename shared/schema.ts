@@ -75,6 +75,49 @@ export const doctorsData = [
   }
 ] as const;
 
+export const clinicsData = [
+  {
+    id: 1,
+    name: "Medical Services Lab",
+    location: "Hospital Central",
+    address: "Rua Santa Maria, 123",
+    specialties: ["Cardiologia", "Ortopedia"],
+    rating: 4.8,
+    phone: "(11) 3456-7890",
+    hours: "Segunda à Sexta: 7h às 19h"
+  },
+  {
+    id: 2,
+    name: "Clínica Saúde Total",
+    location: "Clínica Sul",
+    address: "Av. das Flores, 456",
+    specialties: ["Dermatologia", "Oftalmologia"],
+    rating: 4.9,
+    phone: "(11) 2345-6789",
+    hours: "Segunda à Sábado: 8h às 20h"
+  },
+  {
+    id: 3,
+    name: "Centro Médico Vida",
+    location: "Centro Médico Norte",
+    address: "Rua dos Pinheiros, 789",
+    specialties: ["Neurologia", "Pediatria"],
+    rating: 4.7,
+    phone: "(11) 4567-8901",
+    hours: "Segunda à Sexta: 8h às 18h"
+  },
+  {
+    id: 4,
+    name: "Policlínica Bem Estar",
+    location: "Policlínica Leste",
+    address: "Av. Principal, 1010",
+    specialties: ["Pediatria", "Cardiologia"],
+    rating: 4.6,
+    phone: "(11) 5678-9012",
+    hours: "Segunda à Sábado: 7h às 22h"
+  }
+] as const;
+
 export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   patientName: text("patient_name").notNull(),
