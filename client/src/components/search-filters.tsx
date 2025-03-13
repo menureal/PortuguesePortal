@@ -1,101 +1,57 @@
 import { useState } from "react";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { specialties, locations } from "@shared/schema";
+import { specialties } from "@shared/schema";
+import { Search } from "lucide-react";
 
 interface SearchFiltersProps {
   onSearch: (filters: {
-    location: string;
     specialty: string;
-    provider: string;
-    date: Date | undefined;
+    location: string;
   }) => void;
 }
 
 export function SearchFilters({ onSearch }: SearchFiltersProps) {
-  const [date, setDate] = useState<Date>();
-  const [location, setLocation] = useState("");
   const [specialty, setSpecialty] = useState("");
-  const [provider, setProvider] = useState("");
+  const [location, setLocation] = useState("");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-lg shadow">
-      <div>
-        <Label>Localização</Label>
-        <Select value={location} onValueChange={setLocation}>
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione local" />
-          </SelectTrigger>
-          <SelectContent>
-            {locations.map((loc) => (
-              <SelectItem key={loc} value={loc}>
-                {loc}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label>Especialidade</Label>
-        <Select value={specialty} onValueChange={setSpecialty}>
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione especialidade" />
-          </SelectTrigger>
-          <SelectContent>
-            {specialties.map((spec) => (
-              <SelectItem key={spec} value={spec}>
-                {spec}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label>Prestador de Serviço</Label>
-        <Input 
-          placeholder="Nome do médico"
-          value={provider}
-          onChange={(e) => setProvider(e.target.value)}
+    <div className="p-6">
+      <div className="flex flex-col md:flex-row gap-4">
+        <Input
+          className="flex-1"
+          placeholder="Nome ou especialidade..."
+          value={specialty}
+          onChange={(e) => setSpecialty(e.target.value)}
         />
+        <Input
+          className="flex-1"
+          placeholder="Cidade"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+        />
+        <Button 
+          className="bg-primary hover:bg-primary/90"
+          onClick={() => onSearch({ specialty, location })}
+        >
+          <Search className="w-4 h-4 mr-2" />
+          Pesquisar
+        </Button>
       </div>
 
-      <div>
-        <Label>Data</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full justify-start text-left font-normal"
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PP") : <span>Escolha uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {specialties.map((spec) => (
+          <Button
+            key={spec}
+            variant="outline"
+            size="sm"
+            onClick={() => setSpecialty(spec)}
+            className={specialty === spec ? "bg-primary/10" : ""}
+          >
+            {spec}
+          </Button>
+        ))}
       </div>
-
-      <Button 
-        className="col-span-1 md:col-span-4"
-        onClick={() => onSearch({ location, specialty, provider, date })}
-      >
-        Pesquisar
-      </Button>
     </div>
   );
 }
