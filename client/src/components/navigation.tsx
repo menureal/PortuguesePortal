@@ -4,13 +4,15 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/compon
 
 export function Navigation() {
   return (
-    <nav className="border-b">
+    <nav className="bg-white/95 backdrop-blur-lg border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/">
               <a className="flex items-center">
-                <span className="text-2xl font-bold text-primary">SoSaúde</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                  SoSaúde
+                </span>
               </a>
             </Link>
           </div>
@@ -19,22 +21,22 @@ export function Navigation() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <Link href="/">
-                  <Button variant="ghost">Home</Button>
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Home</Button>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/medicos">
-                  <Button variant="ghost">Médicos</Button>
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Médicos</Button>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/clinicas">
-                  <Button variant="ghost">Clínicas</Button>
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Clínicas</Button>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/hospitais">
-                  <Button variant="ghost">Hospitais</Button>
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Hospitais</Button>
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
