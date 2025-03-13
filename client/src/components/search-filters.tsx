@@ -15,23 +15,40 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
   const [specialty, setSpecialty] = useState("");
   const [location, setLocation] = useState("");
 
+  const weekDays = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
   return (
     <div className="p-8">
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2 justify-center mb-6">
+          {weekDays.map((day) => (
+            <Button
+              key={day}
+              variant="outline"
+              size="sm"
+              className="rounded-full hover:bg-primary/5"
+            >
+              {day}
+            </Button>
+          ))}
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-4">
         <Input
           className="flex-1 h-12 text-lg placeholder:text-gray-400"
-          placeholder="Nome ou especialidade..."
+          placeholder="Especialidade..."
           value={specialty}
           onChange={(e) => setSpecialty(e.target.value)}
         />
         <Input
           className="flex-1 h-12 text-lg placeholder:text-gray-400"
-          placeholder="Cidade"
+          placeholder="Nome do médico..."
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
         <Button 
-          className="h-12 px-8 text-lg bg-primary hover:bg-primary/90"
+          className="h-12 px-8 bg-primary hover:bg-primary/90"
           onClick={() => onSearch({ specialty, location })}
         >
           <Search className="w-5 h-5 mr-2" />

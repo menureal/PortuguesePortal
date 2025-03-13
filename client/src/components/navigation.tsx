@@ -11,14 +11,14 @@ export function Navigation() {
             <Link href="/">
               <a className="flex items-center">
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  SoSaúde
+                  Logo
                 </span>
               </a>
             </Link>
           </div>
 
           <NavigationMenu>
-            <NavigationMenuList>
+            <NavigationMenuList className="space-x-2">
               <NavigationMenuItem>
                 <Link href="/">
                   <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Home</Button>
@@ -37,6 +37,16 @@ export function Navigation() {
               <NavigationMenuItem>
                 <Link href="/hospitais">
                   <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Hospitais</Button>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/centro-saude">
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Centro de Saúde</Button>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/delegacia-saude">
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Delegacia de Saúde</Button>
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
