@@ -18,6 +18,63 @@ export const locations = [
   "Policlínica Leste"
 ] as const;
 
+export const doctorsData = [
+  {
+    id: 1,
+    name: "Dr. Carlos Silva",
+    specialty: "Cardiologia",
+    location: "Hospital Central",
+    crm: "12345-SP",
+    rating: 4.8,
+    availability: ["Segunda", "Quarta", "Sexta"]
+  },
+  {
+    id: 2,
+    name: "Dra. Ana Santos",
+    specialty: "Dermatologia",
+    location: "Clínica Sul",
+    crm: "23456-SP",
+    rating: 4.9,
+    availability: ["Terça", "Quinta"]
+  },
+  {
+    id: 3,
+    name: "Dr. Roberto Oliveira",
+    specialty: "Neurologia",
+    location: "Centro Médico Norte",
+    crm: "34567-SP",
+    rating: 4.7,
+    availability: ["Segunda", "Quinta", "Sexta"]
+  },
+  {
+    id: 4,
+    name: "Dra. Patrícia Lima",
+    specialty: "Pediatria",
+    location: "Policlínica Leste",
+    crm: "45678-SP",
+    rating: 5.0,
+    availability: ["Segunda", "Quarta", "Sexta"]
+  },
+  {
+    id: 5,
+    name: "Dr. Marcos Souza",
+    specialty: "Ortopedia",
+    location: "Hospital Central",
+    crm: "56789-SP",
+    rating: 4.6,
+    availability: ["Terça", "Quinta"]
+  },
+  {
+    id: 6,
+    name: "Dra. Luciana Costa",
+    specialty: "Oftalmologia",
+    location: "Clínica Sul",
+    crm: "67890-SP",
+    rating: 4.8,
+    availability: ["Segunda", "Quarta"]
+  }
+] as const;
+
 export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   patientName: text("patient_name").notNull(),
