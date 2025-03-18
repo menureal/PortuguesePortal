@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 export default function DoctorsPage() {
   const [searchSpecialty, setSearchSpecialty] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
 
   const filteredDoctors = doctorsData.filter(doctor => {
     const matchSpecialty = !searchSpecialty || doctor.specialty.toLowerCase().includes(searchSpecialty.toLowerCase());
@@ -20,17 +18,6 @@ export default function DoctorsPage() {
       (clinic && clinic.location.toLowerCase().includes(searchLocation.toLowerCase()));
     return matchSpecialty && matchLocation;
   });
-
-  // Mock available times
-  const availableTimes = [
-    "09:00", "09:30", "10:00", "10:30", "11:00",
-    "14:00", "14:30", "15:00", "15:30", "16:00"
-  ];
-
-  const getClinicForDoctor = (doctorId) => {
-    const doctor = doctorsData.find(d => d.id === doctorId);
-    return doctor ? clinicsData.find(c => c.id === doctor.clinicId) : null;
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,127 +48,47 @@ export default function DoctorsPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Lista de Médicos */}
-          <div className="lg:col-span-1">
-            <div className="grid grid-cols-1 gap-6">
-              {filteredDoctors.map((doctor) => {
-                const clinic = getClinicForDoctor(doctor.id);
-                return (
-                  <Card 
-                    key={doctor.id} 
-                    className={`cursor-pointer transition-all ${selectedDoctor?.id === doctor.id ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
-                    onClick={() => setSelectedDoctor(doctor)}
-                  >
-                    <div className="aspect-[4/3] relative">
-                      <img 
-                        src={doctor.photoUrl}
-                        alt={doctor.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-semibold mb-2">{doctor.name}</h3>
-                      <div className="space-y-2">
-                        <p className="text-primary font-medium">{doctor.specialty}</p>
-                        <p className="text-gray-600">{clinic ? clinic.name : ''}</p>
-                        <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                          <span className="font-medium">{doctor.rating}</span>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          <p className="font-medium">Disponível em:</p>
-                          <p>{doctor.availability.join(", ")}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Seção de Agendamento */}
-          {selectedDoctor && (
-            <div className="lg:col-span-2">
-              <Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredDoctors.map((doctor) => {
+            const clinic = clinicsData.find(c => c.id === doctor.clinicId);
+            return (
+              <Card key={doctor.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="aspect-[4/3] relative">
+                  <img 
+                    src={doctor.photoUrl}
+                    alt={doctor.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <CardContent className="p-6">
-                  <h2 className="text-2xl font-semibold mb-6">Agende a sua consulta</h2>
-
-                  {/* Doctor Details */}
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-start gap-4">
-                      <img 
-                        src={selectedDoctor.photoUrl}
-                        alt={selectedDoctor.name}
-                        className="w-20 h-20 rounded-full object-cover"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-lg">{selectedDoctor.name}</h3>
-                        <p className="text-gray-600">{selectedDoctor.specialty}</p>
-                        <p className="text-gray-600 text-sm">CRM: {selectedDoctor.crm}</p>
-                        <p className="text-gray-600">
-                          {getClinicForDoctor(selectedDoctor.id)?.name}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2">
-                          Disponível em: {selectedDoctor.availability?.join(", ") || "Não disponível"}
-                        </p>
-                      </div>
+                  <h3 className="text-xl font-semibold mb-2">{doctor.name}</h3>
+                  <div className="space-y-2">
+                    <p className="text-primary font-medium">{doctor.specialty}</p>
+                    <p className="text-gray-600">{clinic ? clinic.name : ''}</p>
+                    <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                      <span className="font-medium">{doctor.rating}</span>
                     </div>
-                  </div>
-
-                  {/* Time Selection */}
-                  <div className="mb-6">
-                    <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
-                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                      {availableTimes.map((time) => (
-                        <Button
-                          key={time}
-                          variant={selectedTime === time ? "default" : "outline"}
-                          onClick={() => setSelectedTime(time)}
-                          className="w-full"
-                        >
-                          {time}
-                        </Button>
-                      ))}
+                    <div className="text-sm text-gray-500">
+                      <p className="font-medium">Disponível em:</p>
+                      <p>{doctor.availability.join(", ")}</p>
                     </div>
+                    <Button 
+                      className="w-full mt-4" 
+                      onClick={() => {
+                        if (clinic) {
+                          window.location.href = `/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}`;
+                        }
+                      }}
+                    >
+                      Agendar Consulta
+                    </Button>
                   </div>
-
-                  {/* Patient Information */}
-                  <div className="space-y-4 mb-6">
-                    <h4 className="font-medium">Informações do Paciente</h4>
-                    <Input placeholder="Nome completo" />
-                    <Input type="email" placeholder="Email" />
-                    <Input placeholder="Contato" />
-                  </div>
-
-                  {/* Payment Information */}
-                  <div className="space-y-4">
-                    <h4 className="font-medium">Pagamento</h4>
-                    <Input placeholder="Número do Cartão" />
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input placeholder="Data Validade" />
-                      <Input placeholder="CCV" />
-                    </div>
-                  </div>
-
-                  <Button 
-                    className="w-full mt-6" 
-                    disabled={!selectedTime}
-                    onClick={() => {
-                      const clinic = getClinicForDoctor(selectedDoctor.id);
-                      if (clinic) {
-                        window.location.href = `/confirmar-agendamento?doctor=${selectedDoctor.id}&clinic=${clinic.id}&time=${selectedTime}`;
-                      }
-                    }}
-                  >
-                    Confirmar Agendamento
-                  </Button>
                 </CardContent>
               </Card>
-            </div>
-          )}
+            );
+          })}
         </div>
       </main>
     </div>
