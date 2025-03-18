@@ -4,113 +4,95 @@ import { z } from "zod";
 
 export const specialties = [
   "Cardiologia",
-  "Dermatologia", 
+  "Dermatologia",
   "Neurologia",
   "Pediatria",
   "Ortopedia",
-  "Oftalmologia"
+  "Oftalmologia",
+  "Otorrinolaringologia",
+  "Clínica Geral",
+  "Psicologia",
+  "Análises Clínicas"
 ] as const;
 
 export const locations = [
-  "Hospital Central",
-  "Clínica Sul",
-  "Centro Médico Norte",
-  "Policlínica Leste"
+  "Boa Vista",
+  "Praia",
+  "São Vicente",
+  "Sal",
+  "São Filipe",
+  "Santo Antão",
+  "Santiago"
 ] as const;
 
 export type Specialty = typeof specialties[number];
 export type Location = typeof locations[number];
 
-// URLs fixas das fotos dos médicos
+// URLs fixas das fotos dos médicos e clínicas (mantendo as mesmas para preservar a consistência visual)
 const doctorImages = {
   dr_carlos: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3",
   dra_ana: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3",
-  dr_roberto: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3",
-  dra_patricia: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3",
-  dr_marcos: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?ixlib=rb-4.0.3",
-  dra_luciana: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3"
+  dr_eduardo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3",
+  dra_evandra: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3",
+  dr_jacob: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?ixlib=rb-4.0.3",
+  dra_carmen: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3"
 };
 
-// URLs fixas das fotos das clínicas
 const clinicImages = {
   medical_services: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3",
-  saude_total: "https://images.unsplash.com/photo-1516549655669-df71cbe43110?ixlib=rb-4.0.3",
+  clinica_mais_saude: "https://images.unsplash.com/photo-1516549655669-df71cbe43110?ixlib=rb-4.0.3",
   centro_medico: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3",
-  policlinica: "https://images.unsplash.com/photo-1626315869436-d6989fea3524?ixlib=rb-4.0.3"
+  cardio_saude: "https://images.unsplash.com/photo-1626315869436-d6989fea3524?ixlib=rb-4.0.3"
 };
 
 export const doctorsData = [
   {
     id: 1,
-    name: "Dr. Carlos Silva",
-    specialty: "Cardiologia" as Specialty,
-    location: "Hospital Central" as Location,
+    name: "Dr. Eduardo H. Pérez",
+    specialty: "Clínica Geral" as Specialty,
+    location: "Santo Antão" as Location,
     clinicId: 1,
-    crm: "12345-SP",
+    crm: "079/2021",
     rating: 4.8,
     availability: ["Segunda", "Quarta", "Sexta"],
-    photoUrl: doctorImages.dr_carlos,
-    description: "Especialista em Cardiologia com mais de 15 anos de experiência"
+    photoUrl: doctorImages.dr_eduardo,
+    description: "Consultório Dr. Eduardo H. Pérez - Atendimento em Clínica Geral"
   },
   {
     id: 2,
-    name: "Dra. Ana Santos",
-    specialty: "Dermatologia" as Specialty,
-    location: "Clínica Sul" as Location,
+    name: "Dra. Evandra Moreira",
+    specialty: "Clínica Geral" as Specialty,
+    location: "Praia" as Location,
     clinicId: 2,
-    crm: "23456-SP",
+    crm: "015/2023",
     rating: 4.9,
     availability: ["Terça", "Quinta"],
-    photoUrl: doctorImages.dra_ana,
-    description: "Dermatologista especializada em tratamentos estéticos e clínicos"
+    photoUrl: doctorImages.dra_evandra,
+    description: "Clínica Médica especializada em atendimento geral"
   },
   {
     id: 3,
-    name: "Dr. Roberto Oliveira",
-    specialty: "Neurologia" as Specialty,
-    location: "Centro Médico Norte" as Location,
+    name: "Dr. Jacob Vicente",
+    specialty: "Psicologia" as Specialty,
+    location: "Praia" as Location,
     clinicId: 3,
-    crm: "34567-SP",
+    crm: "058/2022",
     rating: 4.7,
     availability: ["Segunda", "Quinta", "Sexta"],
-    photoUrl: doctorImages.dr_roberto,
-    description: "Neurologista com foco em diagnóstico e tratamento de doenças neurológicas"
+    photoUrl: doctorImages.dr_jacob,
+    description: "Centro de Atendimento Psicológico"
   },
   {
     id: 4,
-    name: "Dra. Patrícia Lima",
-    specialty: "Pediatria" as Specialty,
-    location: "Policlínica Leste" as Location,
+    name: "Dra. Carmen Almeida",
+    specialty: "Otorrinolaringologia" as Specialty,
+    location: "Praia" as Location,
     clinicId: 4,
-    crm: "45678-SP",
+    crm: "007/2020",
     rating: 5.0,
     availability: ["Segunda", "Quarta", "Sexta"],
-    photoUrl: doctorImages.dra_patricia,
-    description: "Pediatra dedicada ao cuidado integral da saúde infantil"
-  },
-  {
-    id: 5,
-    name: "Dr. Marcos Souza",
-    specialty: "Ortopedia" as Specialty,
-    location: "Hospital Central" as Location,
-    clinicId: 1,
-    crm: "56789-SP",
-    rating: 4.6,
-    availability: ["Terça", "Quinta"],
-    photoUrl: doctorImages.dr_marcos,
-    description: "Ortopedista especializado em traumatologia e medicina esportiva"
-  },
-  {
-    id: 6,
-    name: "Dra. Luciana Costa",
-    specialty: "Oftalmologia" as Specialty,
-    location: "Clínica Sul" as Location,
-    clinicId: 2,
-    crm: "67890-SP",
-    rating: 4.8,
-    availability: ["Segunda", "Quarta"],
-    photoUrl: doctorImages.dra_luciana,
-    description: "Oftalmologista com experiência em cirurgias e tratamentos oculares"
+    photoUrl: doctorImages.dra_carmen,
+    description: "CC&TT Clinica Otorrinolaringologia"
   }
 ];
 
@@ -118,50 +100,74 @@ export const clinicsData = [
   {
     id: 1,
     name: "Medical Services Lab",
-    location: "Hospital Central" as Location,
-    address: "Rua Santa Maria, 123",
-    specialties: ["Cardiologia", "Ortopedia"] as Specialty[],
+    location: "Boa Vista" as Location,
+    address: "Sal Rei",
+    specialties: ["Clínica Geral", "Análises Clínicas"] as Specialty[],
     rating: 4.8,
-    phone: "(11) 3456-7890",
+    phone: "9847620",
     hours: "Segunda à Sexta: 7h às 19h",
     photoUrl: clinicImages.medical_services,
-    description: "Centro médico de excelência em cardiologia e ortopedia"
+    description: "Centro médico completo com laboratório de análises"
   },
   {
     id: 2,
-    name: "Clínica Saúde Total",
-    location: "Clínica Sul" as Location,
-    address: "Av. das Flores, 456",
-    specialties: ["Dermatologia", "Oftalmologia"] as Specialty[],
+    name: "Clínica + Saúde",
+    location: "Praia" as Location,
+    address: "Praia",
+    specialties: ["Clínica Geral", "Cardiologia"] as Specialty[],
     rating: 4.9,
-    phone: "(11) 2345-6789",
+    phone: "2624444",
     hours: "Segunda à Sábado: 8h às 20h",
-    photoUrl: clinicImages.saude_total,
-    description: "Referência em tratamentos dermatológicos e oftalmológicos"
+    photoUrl: clinicImages.clinica_mais_saude,
+    description: "Atendimento médico multidisciplinar"
   },
   {
     id: 3,
-    name: "Centro Médico Vida",
-    location: "Centro Médico Norte" as Location,
-    address: "Rua dos Pinheiros, 789",
-    specialties: ["Neurologia", "Pediatria"] as Specialty[],
+    name: "Centro Médico ET",
+    location: "Santiago" as Location,
+    address: "Assomada",
+    specialties: ["Clínica Geral", "Psicologia"] as Specialty[],
     rating: 4.7,
-    phone: "(11) 4567-8901",
+    phone: "2651800",
     hours: "Segunda à Sexta: 8h às 18h",
     photoUrl: clinicImages.centro_medico,
-    description: "Atendimento especializado em neurologia e pediatria"
+    description: "Centro médico especializado em saúde mental"
   },
   {
     id: 4,
-    name: "Policlínica Bem Estar",
-    location: "Policlínica Leste" as Location,
-    address: "Av. Principal, 1010",
-    specialties: ["Pediatria", "Cardiologia"] as Specialty[],
+    name: "Cardiosaúde",
+    location: "Praia" as Location,
+    address: "Praia",
+    specialties: ["Cardiologia", "Otorrinolaringologia"] as Specialty[],
     rating: 4.6,
-    phone: "(11) 5678-9012",
+    phone: "929 79 30",
     hours: "Segunda à Sábado: 7h às 22h",
-    photoUrl: clinicImages.policlinica,
-    description: "Atendimento humanizado em pediatria e cardiologia"
+    photoUrl: clinicImages.cardio_saude,
+    description: "Especializada em cardiologia e otorrinolaringologia"
+  },
+    {
+    id: 5,
+    name: "2Sofident Clinica Dentária",
+    location: "Praia" as Location,
+    address: "Praia",
+    specialties: ["Odontologia"] as Specialty[],
+    rating: 4.6,
+    phone: "929 79 30",
+    hours: "Segunda à Sábado: 7h às 22h",
+    photoUrl: clinicImages.cardio_saude,
+    description: "Clínica especializada em Odontologia"
+  },
+    {
+    id: 6,
+    name: "Centro de Reabilitação Oral",
+    location: "Praia" as Location,
+    address: "Praia",
+    specialties: ["Odontologia"] as Specialty[],
+    rating: 4.6,
+    phone: "929 79 30",
+    hours: "Segunda à Sábado: 7h às 22h",
+    photoUrl: clinicImages.cardio_saude,
+    description: "Centro especializado em Reabilitação Oral"
   }
 ];
 
