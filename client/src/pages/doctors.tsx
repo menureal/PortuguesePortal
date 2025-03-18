@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "wouter";
 
 export default function DoctorsPage() {
   const [searchSpecialty, setSearchSpecialty] = useState("");
@@ -52,41 +53,33 @@ export default function DoctorsPage() {
           {filteredDoctors.map((doctor) => {
             const clinic = clinicsData.find(c => c.id === doctor.clinicId);
             return (
-              <Card key={doctor.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-[4/3] relative">
-                  <img 
-                    src={doctor.photoUrl}
-                    alt={doctor.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{doctor.name}</h3>
-                  <div className="space-y-2">
-                    <p className="text-primary font-medium">{doctor.specialty}</p>
-                    <p className="text-gray-600">{clinic ? clinic.name : ''}</p>
-                    <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                      <span className="font-medium">{doctor.rating}</span>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      <p className="font-medium">Disponível em:</p>
-                      <p>{doctor.availability.join(", ")}</p>
-                    </div>
-                    <Button 
-                      className="w-full mt-4" 
-                      onClick={() => {
-                        if (clinic) {
-                          window.location.href = `/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}`;
-                        }
-                      }}
-                    >
-                      Agendar Consulta
-                    </Button>
+              <Link key={doctor.id} href={`/confirmar-agendamento?doctor=${doctor.id}&clinic=${doctor.clinicId}`}>
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="aspect-[4/3] relative">
+                    <img 
+                      src={doctor.photoUrl}
+                      alt={doctor.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{doctor.name}</h3>
+                    <div className="space-y-2">
+                      <p className="text-primary font-medium">{doctor.specialty}</p>
+                      <p className="text-gray-600">{clinic ? clinic.name : ''}</p>
+                      <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                        <span className="font-medium">{doctor.rating}</span>
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        <p className="font-medium">Disponível em:</p>
+                        <p>{doctor.availability.join(", ")}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>
