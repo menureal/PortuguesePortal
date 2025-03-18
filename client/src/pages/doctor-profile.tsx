@@ -2,27 +2,28 @@ import { Navigation } from "@/components/navigation";
 import { useRoute } from "wouter";
 import { doctorsData, clinicsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, Calendar } from "lucide-react";
+import { Star, Clock, Building2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useRealTimeAvailability } from "@/hooks/useRealTimeAvailability";
 
 export default function DoctorProfilePage() {
   const [, params] = useRoute("/medico/:id");
   const doctorId = params?.id ? parseInt(params.id) : null;
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const doctor = doctorsData.find(d => d.id === doctorId);
   const clinic = doctor ? clinicsData.find(c => c.id === doctor.clinicId) : null;
 
-  const { availableTimes, isConnected } = useRealTimeAvailability(doctorId || 0, selectedDate.toISOString());
+  // Mock available times
+  const availableTimes = [
+    "09:00", "09:30", "10:00", "10:30", "11:00",
+    "14:00", "14:30", "15:00", "15:30", "16:00"
+  ];
 
   if (!doctor || !clinic) {
     return <div>Médico não encontrado</div>;
   }
-
-  const currentMonth = selectedDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,7 +42,7 @@ export default function DoctorProfilePage() {
                 />
               </div>
               <CardContent className="p-6">
-                <h1 className="text-2xl font-semibold mb-2">{doctor.name}</h1>
+                <h1 className="text-2xl font-bold mb-2">{doctor.name}</h1>
                 <div className="space-y-3">
                   <p className="text-primary font-medium">{doctor.specialty}</p>
                   <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
@@ -60,14 +61,21 @@ export default function DoctorProfilePage() {
             {/* Clinic Info */}
             <Card className="mt-6">
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Local da Consulta</h2>
+                <h2 className="text-xl font-semibold mb-4">Local de Atendimento</h2>
                 <div className="space-y-3">
-                  <div>
-                    <p className="font-medium">{clinic.name}</p>
-                    <p className="text-gray-600">{clinic.address}</p>
+                  <div className="flex items-center text-gray-600">
+                    <Building2 className="h-5 w-5 mr-2" />
+                    <div>
+                      <p className="font-medium">{clinic.name}</p>
+                      <p className="text-sm">{clinic.address}</p>
+                    </div>
                   </div>
-                  <div className="text-gray-600">
-                    <p>Horário de Funcionamento:</p>
+                  <div className="flex items-center text-gray-600">
+                    <Phone className="h-5 w-5 mr-2" />
+                    <p>{clinic.phone}</p>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <Clock className="h-5 w-5 mr-2" />
                     <p>{clinic.hours}</p>
                   </div>
                 </div>
@@ -81,43 +89,9 @@ export default function DoctorProfilePage() {
               <CardContent className="p-6">
                 <h2 className="text-2xl font-semibold mb-6">Agende sua Consulta</h2>
 
-                {/* Calendar Section */}
+                {/* Time Selection */}
                 <div className="mb-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <button className="p-2 hover:bg-gray-100 rounded-full">&lt;</button>
-                    <h3 className="text-lg font-medium">{currentMonth}</h3>
-                    <button className="p-2 hover:bg-gray-100 rounded-full">&gt;</button>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-2 text-center mb-2">
-                    {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(day => (
-                      <div key={day} className="text-sm font-medium text-gray-500">{day}</div>
-                    ))}
-                  </div>
-
-                  {/* Calendar Grid - To be replaced with real calendar component */}
-                  <div className="grid grid-cols-7 gap-2">
-                    {Array.from({ length: 31 }, (_, i) => (
-                      <button
-                        key={i + 1}
-                        className={`p-2 rounded-full hover:bg-primary/10 ${
-                          selectedDate.getDate() === i + 1 ? 'bg-primary text-white' : ''
-                        }`}
-                        onClick={() => {
-                          const newDate = new Date(selectedDate);
-                          newDate.setDate(i + 1);
-                          setSelectedDate(newDate);
-                        }}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Time Slots */}
-                <div className="mb-6">
-                  <h3 className="font-medium mb-3">Horários Disponíveis:</h3>
+                  <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
                   <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                     {availableTimes.map((time) => (
                       <Button
@@ -132,21 +106,33 @@ export default function DoctorProfilePage() {
                   </div>
                 </div>
 
+                {/* Patient Information */}
+                <div className="space-y-4 mb-6">
+                  <h4 className="font-medium">Informações do Paciente</h4>
+                  <Input placeholder="Nome completo" />
+                  <Input type="email" placeholder="Email" />
+                  <Input placeholder="Contato" />
+                </div>
+
+                {/* Payment Information */}
+                <div className="space-y-4">
+                  <h4 className="font-medium">Pagamento</h4>
+                  <Input placeholder="Número do Cartão" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input placeholder="Data Validade" />
+                    <Input placeholder="CCV" />
+                  </div>
+                </div>
+
                 <Button 
                   className="w-full mt-6" 
                   disabled={!selectedTime}
                   onClick={() => {
-                    window.location.href = `/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}&time=${selectedTime}&date=${selectedDate.toISOString()}`;
+                    window.location.href = `/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}&time=${selectedTime}`;
                   }}
                 >
                   Confirmar Agendamento
                 </Button>
-
-                {!isConnected && (
-                  <p className="text-sm text-red-500 mt-2">
-                    Verificando disponibilidade em tempo real...
-                  </p>
-                )}
               </CardContent>
             </Card>
           </div>
