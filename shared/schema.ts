@@ -61,7 +61,10 @@ const doctorImages = {
   dr_eduardo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3",
   dra_evandra: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3",
   dr_jacob: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?ixlib=rb-4.0.3",
-  dra_carmen: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3"
+  dra_carmen: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3",
+  dr_pedro: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3",
+  dra_maria: "https://images.unsplash.com/photo-1527613426441-4da17471b66d?ixlib=rb-4.0.3",
+  dr_jose: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3"
 };
 
 // Categorização das clínicas por tipo
@@ -394,7 +397,7 @@ export const clinicsData = [
     photoUrl: clinicImages.centro_medico,
     description: "Centro Médico"
   },
-    {
+  {
     id: 14,
     type: clinicTypes.MEDICAL,
     name: "Clínica Médico Dentária Triângulo",
@@ -486,6 +489,139 @@ export const doctorsData = [
     availability: ["Segunda", "Quarta", "Sexta"],
     photoUrl: doctorImages.dra_carmen,
     description: "CC&TT Clinica Otorrinolaringologia"
+  },
+  // Novos médicos
+  {
+    id: 5,
+    name: "Dr. Carlos Santos",
+    specialty: "Cardiologia" as Specialty,
+    location: "São Vicente" as Location,
+    clinicId: 25, // Cardio Clinic
+    crm: "082/2021",
+    rating: 4.9,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_carlos,
+    description: "Especialista em Cardiologia"
+  },
+  {
+    id: 6,
+    name: "Dra. Ana Lima",
+    specialty: "Estomatologia" as Specialty,
+    location: "Boa Vista" as Location,
+    clinicId: 1, // Clínica Dentária Sorriso Mais
+    crm: "045/2022",
+    rating: 4.8,
+    availability: ["Segunda", "Terça", "Quinta"],
+    photoUrl: doctorImages.dra_ana,
+    description: "Especialista em Estomatologia"
+  },
+  {
+    id: 7,
+    name: "Dr. Pedro Costa",
+    specialty: "Fisioterapia" as Specialty,
+    location: "Sal" as Location,
+    clinicId: 8, // ATLAS - Clínica de Fisioterapia
+    crm: "091/2021",
+    rating: 4.7,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_pedro,
+    description: "Especialista em Fisioterapia e Reabilitação"
+  },
+  {
+    id: 8,
+    name: "Dra. Maria Silva",
+    specialty: "Clínica Geral" as Specialty,
+    location: "São Nicolau" as Location,
+    clinicId: 23, // Medilar
+    crm: "033/2023",
+    rating: 4.8,
+    availability: ["Terça", "Quinta", "Sexta"],
+    photoUrl: doctorImages.dra_maria,
+    description: "Médica Clínica Geral"
+  },
+  {
+    id: 9,
+    name: "Dr. José Fernandes",
+    specialty: "Cardiologia" as Specialty,
+    location: "Santiago" as Location,
+    clinicId: 15, // Cardiosaúde
+    crm: "064/2022",
+    rating: 4.9,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_jose,
+    description: "Especialista em Cardiologia"
+  },
+  {
+    id: 10,
+    name: "Dr. António Monteiro",
+    specialty: "Estomatologia" as Specialty,
+    location: "Santo Antão" as Location,
+    clinicId: 17, // Confidente - Clínica Dentária
+    crm: "076/2021",
+    rating: 4.8,
+    availability: ["Segunda", "Terça", "Quinta"],
+    photoUrl: doctorImages.dr_carlos,
+    description: "Especialista em Estomatologia"
+  },
+  {
+    id: 11,
+    name: "Dra. Sofia Rodrigues",
+    specialty: "Fisioterapia" as Specialty,
+    location: "São Vicente" as Location,
+    clinicId: 26, // CentroFisio
+    crm: "088/2022",
+    rating: 4.7,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dra_ana,
+    description: "Especialista em Fisioterapia"
+  },
+  {
+    id: 12,
+    name: "Dr. Manuel Cruz",
+    specialty: "Clínica Geral" as Specialty,
+    location: "Sal" as Location,
+    clinicId: 12, // Medical Services
+    crm: "052/2023",
+    rating: 4.8,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_eduardo,
+    description: "Médico Clínica Geral"
+  },
+  {
+    id: 13,
+    name: "Dra. Patrícia Gomes",
+    specialty: "Estomatologia" as Specialty,
+    location: "São Filipe" as Location,
+    clinicId: 4, // Centro de Reabilitação Oral
+    crm: "039/2022",
+    rating: 4.9,
+    availability: ["Terça", "Quinta", "Sexta"],
+    photoUrl: doctorImages.dra_evandra,
+    description: "Especialista em Estomatologia"
+  },
+  {
+    id: 14,
+    name: "Dr. Ricardo Tavares",
+    specialty: "Fisioterapia" as Specialty,
+    location: "Santo Antão" as Location,
+    clinicId: 18, // Fisiolótus
+    crm: "071/2021",
+    rating: 4.8,
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_jacob,
+    description: "Especialista em Fisioterapia"
+  },
+  {
+    id: 15,
+    name: "Dra. Carla Santos",
+    specialty: "Análises Clínicas" as Specialty,
+    location: "São Filipe" as Location,
+    clinicId: 6, // LAC - Laboratório
+    crm: "094/2022",
+    rating: 4.7,
+    availability: ["Segunda", "Terça", "Quinta"],
+    photoUrl: doctorImages.dra_carmen,
+    description: "Especialista em Análises Clínicas"
   }
 ];
 
