@@ -4,14 +4,23 @@ import { clinicsData, doctorsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building2, Star, Phone, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function ClinicDetailsPage() {
   const [, params] = useRoute("/clinica/:id");
   const clinicId = params?.id ? parseInt(params.id) : null;
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const clinic = clinicsData.find(c => c.id === clinicId);
   const clinicDoctors = doctorsData.filter(d => d.clinicId === clinicId);
+
+  // Mock available times
+  const availableTimes = [
+    "09:00", "09:30", "10:00", "10:30", "11:00",
+    "14:00", "14:30", "15:00", "15:30", "16:00"
+  ];
 
   if (!clinic) {
     return <div>Clínica não encontrada</div>;
@@ -73,30 +82,110 @@ export default function ClinicDetailsPage() {
           </CardContent>
         </Card>
 
-        {/* Doctors List */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-6">Médicos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {clinicDoctors.map((doctor) => (
-              <Card key={doctor.id} className="overflow-hidden">
-                <div className="aspect-square">
-                  <img 
-                    src={doctor.photoUrl}
-                    alt={doctor.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-1">{doctor.name}</h3>
-                  <p className="text-primary text-sm mb-2">{doctor.specialty}</p>
-                  <p className="text-gray-600 text-sm mb-3">CRM: {doctor.crm}</p>
-                  <Link href={`/agendar?doctor=${doctor.id}&clinic=${clinic.id}`}>
-                    <Button className="w-full">Agendar</Button>
-                  </Link>
+        {/* Doctors List and Scheduling */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Doctors List */}
+          <div className="lg:col-span-1">
+            <h2 className="text-2xl font-semibold mb-6">Médicos</h2>
+            <div className="space-y-4">
+              {clinicDoctors.map((doctor) => (
+                <Card 
+                  key={doctor.id} 
+                  className={`cursor-pointer transition-all ${selectedDoctor?.id === doctor.id ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
+                  onClick={() => setSelectedDoctor(doctor)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-full overflow-hidden">
+                        <img 
+                          src={doctor.photoUrl}
+                          alt={doctor.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{doctor.name}</h3>
+                        <p className="text-primary text-sm">{doctor.specialty}</p>
+                        <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Scheduling Section */}
+          {selectedDoctor && (
+            <div className="lg:col-span-2">
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-semibold mb-6">Agende a sua consulta</h2>
+
+                  {/* Doctor Details */}
+                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <img 
+                        src={selectedDoctor.photoUrl}
+                        alt={selectedDoctor.name}
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-lg">{selectedDoctor.name}</h3>
+                        <p className="text-gray-600">{selectedDoctor.specialty}</p>
+                        <p className="text-gray-600 text-sm">CRM: {selectedDoctor.crm}</p>
+                        <p className="text-sm text-gray-500 mt-2">
+                          Disponível em: {selectedDoctor.availability?.join(", ") || "Não disponível"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Time Selection */}
+                  <div className="mb-6">
+                    <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                      {availableTimes.map((time) => (
+                        <Button
+                          key={time}
+                          variant={selectedTime === time ? "default" : "outline"}
+                          onClick={() => setSelectedTime(time)}
+                          className="w-full"
+                        >
+                          {time}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Patient Information */}
+                  <div className="space-y-4 mb-6">
+                    <h4 className="font-medium">Informações do Paciente</h4>
+                    <Input placeholder="Nome completo" />
+                    <Input type="email" placeholder="Email" />
+                    <Input placeholder="Contato" />
+                  </div>
+
+                  {/* Payment Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Pagamento</h4>
+                    <Input placeholder="Número do Cartão" />
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input placeholder="Data Validade" />
+                      <Input placeholder="CCV" />
+                    </div>
+                  </div>
+
+                  <Button 
+                    className="w-full mt-6" 
+                    disabled={!selectedTime}
+                  >
+                    Confirmar Agendamento
+                  </Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
