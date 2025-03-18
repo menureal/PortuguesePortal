@@ -112,7 +112,7 @@ export const doctorsData = [
     photoUrl: doctorImages.dra_luciana,
     description: "Oftalmologista com experiência em cirurgias e tratamentos oculares"
   }
-] as const;
+];
 
 export const clinicsData = [
   {
@@ -163,7 +163,7 @@ export const clinicsData = [
     photoUrl: clinicImages.policlinica,
     description: "Atendimento humanizado em pediatria e cardiologia"
   }
-] as const;
+];
 
 export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
