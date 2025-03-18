@@ -3,7 +3,6 @@ import { useState } from "react";
 import { doctorsData, clinicsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
 
@@ -38,14 +37,16 @@ export default function DoctorsPage() {
           <Input
             type="text"
             placeholder="Buscar por especialidade..."
-            className="p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+            value={searchSpecialty}
             onChange={(e) => setSearchSpecialty(e.target.value)}
+            className="w-full"
           />
           <Input
             type="text"
             placeholder="Buscar por localização..."
-            className="p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+            value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
+            className="w-full"
           />
         </div>
 
@@ -53,7 +54,7 @@ export default function DoctorsPage() {
           {filteredDoctors.map((doctor) => {
             const clinic = clinicsData.find(c => c.id === doctor.clinicId);
             return (
-              <Link key={doctor.id} href={`/confirmar-agendamento?doctor=${doctor.id}&clinic=${doctor.clinicId}`}>
+              <Link key={doctor.id} href={`/medico/${doctor.id}`}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
                   <div className="aspect-[4/3] relative">
                     <img 
