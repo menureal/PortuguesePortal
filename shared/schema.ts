@@ -21,6 +21,24 @@ export const locations = [
 export type Specialty = typeof specialties[number];
 export type Location = typeof locations[number];
 
+// URLs fixas das fotos dos médicos
+const doctorImages = {
+  dr_carlos: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3",
+  dra_ana: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3",
+  dr_roberto: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3",
+  dra_patricia: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3",
+  dr_marcos: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?ixlib=rb-4.0.3",
+  dra_luciana: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3"
+};
+
+// URLs fixas das fotos das clínicas
+const clinicImages = {
+  medical_services: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3",
+  saude_total: "https://images.unsplash.com/photo-1516549655669-df71cbe43110?ixlib=rb-4.0.3",
+  centro_medico: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3",
+  policlinica: "https://images.unsplash.com/photo-1626315869436-d6989fea3524?ixlib=rb-4.0.3"
+};
+
 export const doctorsData = [
   {
     id: 1,
@@ -30,7 +48,9 @@ export const doctorsData = [
     clinicId: 1,
     crm: "12345-SP",
     rating: 4.8,
-    availability: ["Segunda", "Quarta", "Sexta"]
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dr_carlos,
+    description: "Especialista em Cardiologia com mais de 15 anos de experiência"
   },
   {
     id: 2,
@@ -40,7 +60,9 @@ export const doctorsData = [
     clinicId: 2,
     crm: "23456-SP",
     rating: 4.9,
-    availability: ["Terça", "Quinta"]
+    availability: ["Terça", "Quinta"],
+    photoUrl: doctorImages.dra_ana,
+    description: "Dermatologista especializada em tratamentos estéticos e clínicos"
   },
   {
     id: 3,
@@ -50,7 +72,9 @@ export const doctorsData = [
     clinicId: 3,
     crm: "34567-SP",
     rating: 4.7,
-    availability: ["Segunda", "Quinta", "Sexta"]
+    availability: ["Segunda", "Quinta", "Sexta"],
+    photoUrl: doctorImages.dr_roberto,
+    description: "Neurologista com foco em diagnóstico e tratamento de doenças neurológicas"
   },
   {
     id: 4,
@@ -60,7 +84,9 @@ export const doctorsData = [
     clinicId: 4,
     crm: "45678-SP",
     rating: 5.0,
-    availability: ["Segunda", "Quarta", "Sexta"]
+    availability: ["Segunda", "Quarta", "Sexta"],
+    photoUrl: doctorImages.dra_patricia,
+    description: "Pediatra dedicada ao cuidado integral da saúde infantil"
   },
   {
     id: 5,
@@ -70,7 +96,9 @@ export const doctorsData = [
     clinicId: 1,
     crm: "56789-SP",
     rating: 4.6,
-    availability: ["Terça", "Quinta"]
+    availability: ["Terça", "Quinta"],
+    photoUrl: doctorImages.dr_marcos,
+    description: "Ortopedista especializado em traumatologia e medicina esportiva"
   },
   {
     id: 6,
@@ -80,7 +108,9 @@ export const doctorsData = [
     clinicId: 2,
     crm: "67890-SP",
     rating: 4.8,
-    availability: ["Segunda", "Quarta"]
+    availability: ["Segunda", "Quarta"],
+    photoUrl: doctorImages.dra_luciana,
+    description: "Oftalmologista com experiência em cirurgias e tratamentos oculares"
   }
 ] as const;
 
@@ -93,7 +123,9 @@ export const clinicsData = [
     specialties: ["Cardiologia", "Ortopedia"] as Specialty[],
     rating: 4.8,
     phone: "(11) 3456-7890",
-    hours: "Segunda à Sexta: 7h às 19h"
+    hours: "Segunda à Sexta: 7h às 19h",
+    photoUrl: clinicImages.medical_services,
+    description: "Centro médico de excelência em cardiologia e ortopedia"
   },
   {
     id: 2,
@@ -103,7 +135,9 @@ export const clinicsData = [
     specialties: ["Dermatologia", "Oftalmologia"] as Specialty[],
     rating: 4.9,
     phone: "(11) 2345-6789",
-    hours: "Segunda à Sábado: 8h às 20h"
+    hours: "Segunda à Sábado: 8h às 20h",
+    photoUrl: clinicImages.saude_total,
+    description: "Referência em tratamentos dermatológicos e oftalmológicos"
   },
   {
     id: 3,
@@ -113,7 +147,9 @@ export const clinicsData = [
     specialties: ["Neurologia", "Pediatria"] as Specialty[],
     rating: 4.7,
     phone: "(11) 4567-8901",
-    hours: "Segunda à Sexta: 8h às 18h"
+    hours: "Segunda à Sexta: 8h às 18h",
+    photoUrl: clinicImages.centro_medico,
+    description: "Atendimento especializado em neurologia e pediatria"
   },
   {
     id: 4,
@@ -123,7 +159,9 @@ export const clinicsData = [
     specialties: ["Pediatria", "Cardiologia"] as Specialty[],
     rating: 4.6,
     phone: "(11) 5678-9012",
-    hours: "Segunda à Sábado: 7h às 22h"
+    hours: "Segunda à Sábado: 7h às 22h",
+    photoUrl: clinicImages.policlinica,
+    description: "Atendimento humanizado em pediatria e cardiologia"
   }
 ] as const;
 

@@ -63,7 +63,7 @@ export default function ClinicDetailsPage() {
               <div>
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+                    src={clinic.photoUrl}
                     alt={clinic.name}
                     className="w-full h-full object-cover"
                   />
@@ -81,7 +81,7 @@ export default function ClinicDetailsPage() {
               <Card key={doctor.id} className="overflow-hidden">
                 <div className="aspect-square">
                   <img 
-                    src={`https://images.unsplash.com/photo-${doctor.id + 1612349317150}-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80`}
+                    src={doctor.photoUrl}
                     alt={doctor.name}
                     className="w-full h-full object-cover"
                   />

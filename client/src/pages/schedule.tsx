@@ -39,7 +39,7 @@ export default function SchedulePage() {
             <CardContent className="p-6">
               <div className="aspect-square rounded-lg overflow-hidden mb-4">
                 <img 
-                  src={`https://images.unsplash.com/photo-${doctor.id + 1612349317150}-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80`}
+                  src={doctor.photoUrl}
                   alt={doctor.name}
                   className="w-full h-full object-cover"
                 />
@@ -64,7 +64,7 @@ export default function SchedulePage() {
               {/* Clinic Image */}
               <div className="aspect-video rounded-lg overflow-hidden mb-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+                  src={clinic.photoUrl}
                   alt={clinic.name}
                   className="w-full h-full object-cover"
                 />
@@ -72,7 +72,7 @@ export default function SchedulePage() {
 
               {/* Time Selection */}
               <div className="mb-6">
-                <h4 className="font-semibold mb-3">Horários Disponíveis:</h4>
+                <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
                 <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                   {availableTimes.map((time) => (
                     <Button
