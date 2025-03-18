@@ -9,9 +9,13 @@ import { Link } from "wouter";
 export default function ClinicDetailsPage() {
   const [, params] = useRoute("/clinica/:id");
   const clinicId = params?.id ? parseInt(params.id) : null;
-  
+
   const clinic = clinicsData.find(c => c.id === clinicId);
-  const clinicDoctors = doctorsData.filter(d => d.location === clinic?.location);
+  // Filtra apenas os médicos que trabalham nesta clínica e que têm especialidades oferecidas pela clínica
+  const clinicDoctors = doctorsData.filter(d => 
+    d.location === clinic?.location && 
+    clinic?.specialties.includes(d.specialty)
+  );
 
   if (!clinic) {
     return <div>Clínica não encontrada</div>;
@@ -20,7 +24,7 @@ export default function ClinicDetailsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Clinic Info */}
         <Card className="mb-8">
@@ -44,6 +48,19 @@ export default function ClinicDetailsPage() {
                   <div className="flex items-center text-gray-600">
                     <Clock className="h-5 w-5 mr-2" />
                     <p>{clinic.hours}</p>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-semibold mb-2">Especialidades:</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {clinic.specialties.map((specialty) => (
+                        <span 
+                          key={specialty}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -77,7 +94,7 @@ export default function ClinicDetailsPage() {
                   <h3 className="font-semibold mb-1">{doctor.name}</h3>
                   <p className="text-primary text-sm mb-2">{doctor.specialty}</p>
                   <p className="text-gray-600 text-sm mb-3">CRM: {doctor.crm}</p>
-                  <Link href={`/agendar?doctor=${doctor.id}`}>
+                  <Link href={`/agendar?doctor=${doctor.id}&clinic=${clinic.id}`}>
                     <Button className="w-full">Agendar</Button>
                   </Link>
                 </CardContent>
