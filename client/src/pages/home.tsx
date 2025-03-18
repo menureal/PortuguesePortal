@@ -34,15 +34,15 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            <Card className="shadow-2xl backdrop-blur-lg bg-white/95">
+          <div className="max-w-4xl mx-auto px-4 md:px-0">
+            <Card className="shadow-2xl backdrop-blur-lg bg-white/95 w-full">
               <CardContent className="p-0">
                 <SearchFilters onSearch={handleSearch} />
               </CardContent>
             </Card>
           </div>
 
-          <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="mt-10 md:mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 px-4 md:px-0">
             <Card className="bg-white/90 backdrop-blur-lg shadow-xl hover:shadow-2xl transition-all">
               <CardContent className="p-8 text-center">
                 <Clock className="w-12 h-12 mx-auto mb-6 text-primary" />
