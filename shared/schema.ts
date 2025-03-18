@@ -18,12 +18,16 @@ export const locations = [
   "Policlínica Leste"
 ] as const;
 
+export type Specialty = typeof specialties[number];
+export type Location = typeof locations[number];
+
 export const doctorsData = [
   {
     id: 1,
     name: "Dr. Carlos Silva",
-    specialty: "Cardiologia",
-    location: "Hospital Central",
+    specialty: "Cardiologia" as Specialty,
+    location: "Hospital Central" as Location,
+    clinicId: 1,
     crm: "12345-SP",
     rating: 4.8,
     availability: ["Segunda", "Quarta", "Sexta"]
@@ -31,8 +35,9 @@ export const doctorsData = [
   {
     id: 2,
     name: "Dra. Ana Santos",
-    specialty: "Dermatologia",
-    location: "Clínica Sul",
+    specialty: "Dermatologia" as Specialty,
+    location: "Clínica Sul" as Location,
+    clinicId: 2,
     crm: "23456-SP",
     rating: 4.9,
     availability: ["Terça", "Quinta"]
@@ -40,8 +45,9 @@ export const doctorsData = [
   {
     id: 3,
     name: "Dr. Roberto Oliveira",
-    specialty: "Neurologia",
-    location: "Centro Médico Norte",
+    specialty: "Neurologia" as Specialty,
+    location: "Centro Médico Norte" as Location,
+    clinicId: 3,
     crm: "34567-SP",
     rating: 4.7,
     availability: ["Segunda", "Quinta", "Sexta"]
@@ -49,8 +55,9 @@ export const doctorsData = [
   {
     id: 4,
     name: "Dra. Patrícia Lima",
-    specialty: "Pediatria",
-    location: "Policlínica Leste",
+    specialty: "Pediatria" as Specialty,
+    location: "Policlínica Leste" as Location,
+    clinicId: 4,
     crm: "45678-SP",
     rating: 5.0,
     availability: ["Segunda", "Quarta", "Sexta"]
@@ -58,8 +65,9 @@ export const doctorsData = [
   {
     id: 5,
     name: "Dr. Marcos Souza",
-    specialty: "Ortopedia",
-    location: "Hospital Central",
+    specialty: "Ortopedia" as Specialty,
+    location: "Hospital Central" as Location,
+    clinicId: 1,
     crm: "56789-SP",
     rating: 4.6,
     availability: ["Terça", "Quinta"]
@@ -67,8 +75,9 @@ export const doctorsData = [
   {
     id: 6,
     name: "Dra. Luciana Costa",
-    specialty: "Oftalmologia",
-    location: "Clínica Sul",
+    specialty: "Oftalmologia" as Specialty,
+    location: "Clínica Sul" as Location,
+    clinicId: 2,
     crm: "67890-SP",
     rating: 4.8,
     availability: ["Segunda", "Quarta"]
@@ -79,9 +88,9 @@ export const clinicsData = [
   {
     id: 1,
     name: "Medical Services Lab",
-    location: "Hospital Central",
+    location: "Hospital Central" as Location,
     address: "Rua Santa Maria, 123",
-    specialties: ["Cardiologia", "Ortopedia"],
+    specialties: ["Cardiologia", "Ortopedia"] as Specialty[],
     rating: 4.8,
     phone: "(11) 3456-7890",
     hours: "Segunda à Sexta: 7h às 19h"
@@ -89,9 +98,9 @@ export const clinicsData = [
   {
     id: 2,
     name: "Clínica Saúde Total",
-    location: "Clínica Sul",
+    location: "Clínica Sul" as Location,
     address: "Av. das Flores, 456",
-    specialties: ["Dermatologia", "Oftalmologia"],
+    specialties: ["Dermatologia", "Oftalmologia"] as Specialty[],
     rating: 4.9,
     phone: "(11) 2345-6789",
     hours: "Segunda à Sábado: 8h às 20h"
@@ -99,9 +108,9 @@ export const clinicsData = [
   {
     id: 3,
     name: "Centro Médico Vida",
-    location: "Centro Médico Norte",
+    location: "Centro Médico Norte" as Location,
     address: "Rua dos Pinheiros, 789",
-    specialties: ["Neurologia", "Pediatria"],
+    specialties: ["Neurologia", "Pediatria"] as Specialty[],
     rating: 4.7,
     phone: "(11) 4567-8901",
     hours: "Segunda à Sexta: 8h às 18h"
@@ -109,9 +118,9 @@ export const clinicsData = [
   {
     id: 4,
     name: "Policlínica Bem Estar",
-    location: "Policlínica Leste",
+    location: "Policlínica Leste" as Location,
     address: "Av. Principal, 1010",
-    specialties: ["Pediatria", "Cardiologia"],
+    specialties: ["Pediatria", "Cardiologia"] as Specialty[],
     rating: 4.6,
     phone: "(11) 5678-9012",
     hours: "Segunda à Sábado: 7h às 22h"

@@ -11,11 +11,7 @@ export default function ClinicDetailsPage() {
   const clinicId = params?.id ? parseInt(params.id) : null;
 
   const clinic = clinicsData.find(c => c.id === clinicId);
-  // Filtra apenas os médicos que trabalham nesta clínica e que têm especialidades oferecidas pela clínica
-  const clinicDoctors = doctorsData.filter(d => 
-    d.location === clinic?.location && 
-    clinic?.specialties.includes(d.specialty)
-  );
+  const clinicDoctors = doctorsData.filter(d => d.clinicId === clinicId);
 
   if (!clinic) {
     return <div>Clínica não encontrada</div>;
