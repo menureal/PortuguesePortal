@@ -3,6 +3,9 @@ import { useState } from "react";
 import { clinicsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building2, Star, Phone, Clock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function ClinicsPage() {
   const [searchSpecialty, setSearchSpecialty] = useState("");
@@ -14,6 +17,7 @@ export default function ClinicsPage() {
         spec.toLowerCase().includes(searchSpecialty.toLowerCase())
       );
     const matchLocation = !searchLocation || 
+      clinic.name.toLowerCase().includes(searchLocation.toLowerCase()) ||
       clinic.location.toLowerCase().includes(searchLocation.toLowerCase());
     return matchSpecialty && matchLocation;
   });
@@ -21,7 +25,7 @@ export default function ClinicsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -32,51 +36,89 @@ export default function ClinicsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <input
-            type="text"
-            placeholder="Buscar por especialidade..."
-            className="p-2 border rounded"
-            onChange={(e) => setSearchSpecialty(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Buscar por localização..."
-            className="p-2 border rounded"
-            onChange={(e) => setSearchLocation(e.target.value)}
-          />
+        {/* Search Filters */}
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              placeholder="Especialidade..."
+              value={searchSpecialty}
+              onChange={(e) => setSearchSpecialty(e.target.value)}
+              className="w-full"
+            />
+            <Input
+              placeholder="Nome da clínica..."
+              value={searchLocation}
+              onChange={(e) => setSearchLocation(e.target.value)}
+              className="w-full"
+            />
+            <Button className="w-full">
+              Procurar
+            </Button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredClinics.map((clinic) => (
-            <Card key={clinic.id} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{clinic.name}</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center text-gray-600">
-                    <Building2 className="h-4 w-4 mr-2" />
-                    <p>{clinic.address}</p>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
-                    <span>{clinic.rating}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <Phone className="h-4 w-4 mr-2" />
-                    <p>{clinic.phone}</p>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <p>{clinic.hours}</p>
-                  </div>
-                  <div className="mt-2">
-                    <p className="font-semibold text-gray-700">Especialidades:</p>
-                    <p className="text-gray-600">{clinic.specialties.join(", ")}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Popular Clinics Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">Clínicas populares</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredClinics.slice(0, 3).map((clinic) => (
+              <Link key={clinic.id} href={`/clinica/${clinic.id}`}>
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{clinic.name}</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center text-gray-600">
+                        <Building2 className="h-4 w-4 mr-2" />
+                        <p>{clinic.address}</p>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
+                        <span>{clinic.rating}</span>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Phone className="h-4 w-4 mr-2" />
+                        <p>{clinic.phone}</p>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="h-4 w-4 mr-2" />
+                        <p>{clinic.hours}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Search Results */}
+        <div>
+          <h2 className="text-2xl font-semibold mb-6">Resultado da Pesquisa</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredClinics.map((clinic) => (
+              <Link key={clinic.id} href={`/clinica/${clinic.id}`}>
+                <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{clinic.name}</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center text-gray-600">
+                        <Building2 className="h-4 w-4 mr-2" />
+                        <p>{clinic.address}</p>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
+                        <span>{clinic.rating}</span>
+                      </div>
+                      <div className="mt-2">
+                        <p className="font-semibold text-gray-700">Especialidades:</p>
+                        <p className="text-gray-600">{clinic.specialties.join(", ")}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
     </div>
