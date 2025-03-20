@@ -2,6 +2,15 @@ import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const hospitalTypes = [
+  "Hospital Central",
+  "Hospital Regional",
+  "Centro de Saúde",
+  "Posto Sanitário"
+] as const;
+
+export type HospitalType = typeof hospitalTypes[number];
+
 export const specialties = [
   "Cardiologia",
   "Dermatologia",
@@ -438,6 +447,104 @@ export const clinicsData = [
     hours: "Segunda à Sexta: 8h às 18h",
     photoUrl: clinicImages.cardio_saude,
     description: "Centro Médico especializado em cardiologia"
+  }
+];
+
+export const hospitalsData = [
+  {
+    id: 1,
+    name: "Hospital Dr. Baptista de Sousa",
+    type: "Hospital Central" as HospitalType,
+    location: "São Vicente" as Location,
+    address: "Mindelo",
+    specialties: [
+      "Cardiologia",
+      "Pediatria",
+      "Cirurgia",
+      "Ortopedia",
+      "Neurologia"
+    ] as Specialty[],
+    rating: 4.8,
+    phone: "232 2261",
+    hours: "24 horas",
+    emergencyService: true,
+    photoUrl: "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?ixlib=rb-4.0.3",
+    description: "Hospital Central de referência para a região norte do país"
+  },
+  {
+    id: 2,
+    name: "Hospital Dr. Agostinho Neto",
+    type: "Hospital Central" as HospitalType,
+    location: "Santiago" as Location,
+    address: "Praia",
+    specialties: [
+      "Cardiologia",
+      "Pediatria",
+      "Cirurgia",
+      "Ortopedia",
+      "Neurologia",
+      "Oncologia"
+    ] as Specialty[],
+    rating: 4.7,
+    phone: "261 2000",
+    hours: "24 horas",
+    emergencyService: true,
+    photoUrl: "https://images.unsplash.com/photo-1596541223130-5d31a73fb6c6?ixlib=rb-4.0.3",
+    description: "Principal hospital de Cabo Verde, referência nacional"
+  },
+  {
+    id: 3,
+    name: "Hospital Regional João Morais",
+    type: "Hospital Regional" as HospitalType,
+    location: "Santo Antão" as Location,
+    address: "Ribeira Grande",
+    specialties: [
+      "Clínica Geral",
+      "Pediatria",
+      "Cirurgia"
+    ] as Specialty[],
+    rating: 4.5,
+    phone: "221 1170",
+    hours: "24 horas",
+    emergencyService: true,
+    photoUrl: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?ixlib=rb-4.0.3",
+    description: "Hospital Regional que serve a ilha de Santo Antão"
+  },
+  {
+    id: 4,
+    name: "Hospital Regional Dr. Santa Rita Vieira",
+    type: "Hospital Regional" as HospitalType,
+    location: "Santiago" as Location,
+    address: "Santa Catarina",
+    specialties: [
+      "Clínica Geral",
+      "Pediatria",
+      "Ginecologia"
+    ] as Specialty[],
+    rating: 4.6,
+    phone: "265 1111",
+    hours: "24 horas",
+    emergencyService: true,
+    photoUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3",
+    description: "Hospital Regional que serve a região de Santa Catarina"
+  },
+  {
+    id: 5,
+    name: "Hospital Regional São Francisco de Assis",
+    type: "Hospital Regional" as HospitalType,
+    location: "São Filipe" as Location,
+    address: "São Filipe, Fogo",
+    specialties: [
+      "Clínica Geral",
+      "Pediatria",
+      "Cirurgia Básica"
+    ] as Specialty[],
+    rating: 4.4,
+    phone: "281 1316",
+    hours: "24 horas",
+    emergencyService: true,
+    photoUrl: "https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?ixlib=rb-4.0.3",
+    description: "Principal unidade hospitalar da ilha do Fogo"
   }
 ];
 
