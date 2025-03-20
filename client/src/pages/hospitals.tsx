@@ -8,27 +8,33 @@ import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 
 // Agrupar hospitais por tipo
-const groupHospitalsByType = (hospitals) => {
+const groupHospitalsByType = (hospitals: typeof hospitalsData) => {
   return hospitals.reduce((acc, hospital) => {
     if (!acc[hospital.type]) {
       acc[hospital.type] = [];
     }
     acc[hospital.type].push(hospital);
     return acc;
-  }, {});
+  }, {} as Record<string, typeof hospitalsData>);
 };
 
 export default function HospitalsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
+  const [searchSpecialty, setSearchSpecialty] = useState("");
 
   const filteredHospitals = hospitalsData.filter(hospital => {
     const matchQuery = !searchQuery || 
-      hospital.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      hospital.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+      hospital.name.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchLocation = !searchLocation || 
-      hospital.location.toLowerCase().includes(searchLocation.toLowerCase());
-    return matchQuery && matchLocation;
+      hospital.location.toLowerCase().includes(searchLocation.toLowerCase()) ||
+      hospital.address.toLowerCase().includes(searchLocation.toLowerCase());
+
+    const matchSpecialty = !searchSpecialty || 
+      hospital.specialties.some(s => s.toLowerCase().includes(searchSpecialty.toLowerCase()));
+
+    return matchQuery && matchLocation && matchSpecialty;
   });
 
   const groupedHospitals = groupHospitalsByType(filteredHospitals);
@@ -47,10 +53,10 @@ export default function HospitalsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <Input
             type="text"
-            placeholder="Buscar por nome ou especialidade..."
+            placeholder="Buscar por nome do hospital..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full"
@@ -60,6 +66,13 @@ export default function HospitalsPage() {
             placeholder="Buscar por localização..."
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
+            className="w-full"
+          />
+          <Input
+            type="text"
+            placeholder="Buscar por especialidade..."
+            value={searchSpecialty}
+            onChange={(e) => setSearchSpecialty(e.target.value)}
             className="w-full"
           />
         </div>
@@ -122,6 +135,15 @@ export default function HospitalsPage() {
             </div>
           </div>
         ))}
+
+        {/* No Results Message */}
+        {Object.keys(groupedHospitals).length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-lg text-gray-600">
+              Nenhum hospital encontrado com os critérios de busca selecionados.
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );
