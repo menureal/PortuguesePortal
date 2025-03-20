@@ -2,7 +2,7 @@ import { Navigation } from "@/components/navigation";
 import { useRoute } from "wouter";
 import { clinicsData, doctorsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Star, Phone, Clock } from "lucide-react";
+import { Building2, Star, Phone, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -39,19 +39,26 @@ export default function ClinicDetailsPage() {
                 <h1 className="text-3xl font-bold mb-4">{clinic.name}</h1>
                 <div className="space-y-3">
                   <div className="flex items-center text-gray-600">
-                    <Building2 className="h-5 w-5 mr-2" />
-                    <p>{clinic.address}</p>
+                    <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium">{clinic.location}</p>
+                      <p className="text-sm">{clinic.address}</p>
+                    </div>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Star className="h-5 w-5 mr-2 text-yellow-400 fill-current" />
+                    <Building2 className="h-5 w-5 mr-2 flex-shrink-0" />
+                    <p>{clinic.type}</p>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <Star className="h-5 w-5 mr-2 text-yellow-400 fill-current flex-shrink-0" />
                     <span>{clinic.rating}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Phone className="h-5 w-5 mr-2" />
+                    <Phone className="h-5 w-5 mr-2 flex-shrink-0" />
                     <p>{clinic.phone}</p>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Clock className="h-5 w-5 mr-2" />
+                    <Clock className="h-5 w-5 mr-2 flex-shrink-0" />
                     <p>{clinic.hours}</p>
                   </div>
                   <div className="mt-4">
@@ -77,6 +84,7 @@ export default function ClinicDetailsPage() {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                <p className="mt-4 text-gray-600">{clinic.description}</p>
               </div>
             </div>
           </CardContent>
@@ -161,18 +169,10 @@ export default function ClinicDetailsPage() {
                   {/* Patient Information */}
                   <div className="space-y-4 mb-6">
                     <h4 className="font-medium">Informações do Paciente</h4>
-                    <Input placeholder="Nome completo" />
-                    <Input type="email" placeholder="Email" />
-                    <Input placeholder="Contato" />
-                  </div>
-
-                  {/* Payment Information */}
-                  <div className="space-y-4">
-                    <h4 className="font-medium">Pagamento</h4>
-                    <Input placeholder="Número do Cartão" />
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input placeholder="Data Validade" />
-                      <Input placeholder="CCV" />
+                    <div className="grid gap-4">
+                      <Input placeholder="Nome completo" />
+                      <Input type="email" placeholder="Email" />
+                      <Input placeholder="Contato" />
                     </div>
                   </div>
 
