@@ -1,56 +1,76 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function Navigation() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/medicos", label: "Médicos" },
+    { href: "/clinicas", label: "Clínicas" },
+    { href: "/hospitais", label: "Hospitais" },
+    { href: "/centro-saude", label: "Centro de Saúde" },
+    { href: "/delegacia-saude", label: "Delegacia de Saúde" },
+  ];
+
   return (
-    <nav className="bg-white/95 backdrop-blur-lg border-b">
+    <nav className="bg-white/95 backdrop-blur-lg border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/">
-              <a className="flex items-center">
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  Logo
-                </span>
-              </a>
-            </Link>
+        <div className="flex justify-between h-16 items-center">
+          <Link href="/">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              Logo
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-2">
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
+                  {item.label}
+                </Button>
+              </Link>
+            ))}
           </div>
 
-          <NavigationMenu>
-            <NavigationMenuList className="space-x-2">
-              <NavigationMenuItem>
-                <Link href="/">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Home</Button>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/medicos">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Médicos</Button>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/clinicas">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Clínicas</Button>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/hospitais">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Hospitais</Button>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/centro-saude">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Centro de Saúde</Button>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/delegacia-saude">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">Delegacia de Saúde</Button>
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="px-4 py-2 flex flex-col space-y-2">
+                  {navItems.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-gray-700 hover:text-blue-600"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </nav>
