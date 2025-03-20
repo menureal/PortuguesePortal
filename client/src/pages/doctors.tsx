@@ -33,7 +33,7 @@ export default function DoctorsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <Input
             type="text"
             placeholder="Buscar por especialidade..."
@@ -50,12 +50,12 @@ export default function DoctorsPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDoctors.map((doctor) => {
             const clinic = clinicsData.find(c => c.id === doctor.clinicId);
             return (
               <Link key={doctor.id} href={`/medico/${doctor.id}`}>
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full">
                   <div className="aspect-[4/3] relative">
                     <img 
                       src={doctor.photoUrl}

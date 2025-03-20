@@ -64,18 +64,18 @@ export default function DoctorProfilePage() {
                 <h2 className="text-xl font-semibold mb-4">Local de Atendimento</h2>
                 <div className="space-y-3">
                   <div className="flex items-center text-gray-600">
-                    <Building2 className="h-5 w-5 mr-2" />
+                    <Building2 className="h-5 w-5 mr-2 flex-shrink-0" />
                     <div>
                       <p className="font-medium">{clinic.name}</p>
                       <p className="text-sm">{clinic.address}</p>
                     </div>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Phone className="h-5 w-5 mr-2" />
+                    <Phone className="h-5 w-5 mr-2 flex-shrink-0" />
                     <p>{clinic.phone}</p>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Clock className="h-5 w-5 mr-2" />
+                    <Clock className="h-5 w-5 mr-2 flex-shrink-0" />
                     <p>{clinic.hours}</p>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default function DoctorProfilePage() {
                 {/* Time Selection */}
                 <div className="mb-6">
                   <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
-                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                     {availableTimes.map((time) => (
                       <Button
                         key={time}
@@ -109,18 +109,22 @@ export default function DoctorProfilePage() {
                 {/* Patient Information */}
                 <div className="space-y-4 mb-6">
                   <h4 className="font-medium">Informações do Paciente</h4>
-                  <Input placeholder="Nome completo" />
-                  <Input type="email" placeholder="Email" />
-                  <Input placeholder="Contato" />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Input placeholder="Nome completo" className="w-full" />
+                    <Input type="email" placeholder="Email" className="w-full" />
+                    <Input placeholder="Contato" className="w-full sm:col-span-2" />
+                  </div>
                 </div>
 
                 {/* Payment Information */}
                 <div className="space-y-4">
                   <h4 className="font-medium">Pagamento</h4>
-                  <Input placeholder="Número do Cartão" />
-                  <div className="grid grid-cols-2 gap-3">
-                    <Input placeholder="Data Validade" />
-                    <Input placeholder="CCV" />
+                  <div className="grid gap-4">
+                    <Input placeholder="Número do Cartão" className="w-full" />
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input placeholder="Data Validade" className="w-full" />
+                      <Input placeholder="CCV" className="w-full" />
+                    </div>
                   </div>
                 </div>
 
