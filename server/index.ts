@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Log middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -34,36 +35,49 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
-    log("Starting server setup...");
+    log("[Setup] Starting server initialization...");
+
+    log("[Setup] Registering routes...");
     const server = await registerRoutes(app);
+    log("[Setup] Routes registered successfully");
 
+    log("[Setup] Configuring WebSocket...");
     setupWebSocket(server);
+    log("[Setup] WebSocket configured");
 
+    // Error handling middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
+      log(`[Error] ${message}`);
       res.status(status).json({ message });
-      throw err;
     });
 
+    // Setup Vite or static files
     if (app.get("env") === "development") {
+      log("[Setup] Configuring Vite for development...");
       await setupVite(app, server);
+      log("[Setup] Vite configured successfully");
     } else {
+      log("[Setup] Setting up static file serving...");
       serveStatic(app);
+      log("[Setup] Static file serving configured");
     }
 
     const port = 5000;
-    log("About to start server on port " + port);
+    log("[Setup] About to start server on port " + port);
 
     server.listen({
       port,
       host: "0.0.0.0",
       reusePort: true,
     }, () => {
-      log(`Server is now listening on port ${port}`);
+      log("[Ready] Server is now listening on port " + port);
+      log("[Info] You can now view the site at: http://localhost:5000");
     });
+
   } catch (error) {
-    log("Error starting server: " + error);
+    log("[Fatal] Error starting server: " + error);
     process.exit(1);
   }
 })();
