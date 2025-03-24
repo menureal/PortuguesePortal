@@ -7,29 +7,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Log middleware
+// Basic logging middleware
 app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-      log(logLine);
-    }
-  });
-
+  log(`${req.method} ${req.path}`);
   next();
 });
 
@@ -37,6 +17,7 @@ app.use((req, res, next) => {
   try {
     log("[Setup] Starting server initialization...");
 
+    // Register routes first
     log("[Setup] Registering routes...");
     const server = await registerRoutes(app);
     log("[Setup] Routes registered successfully");
@@ -45,7 +26,8 @@ app.use((req, res, next) => {
     setupWebSocket(server);
     log("[Setup] WebSocket configured");
 
-    // Error handling middleware
+
+    // Basic error handling
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
@@ -53,16 +35,10 @@ app.use((req, res, next) => {
       res.status(status).json({ message });
     });
 
-    // Setup Vite or static files
-    if (app.get("env") === "development") {
-      log("[Setup] Configuring Vite for development...");
-      await setupVite(app, server);
-      log("[Setup] Vite configured successfully");
-    } else {
-      log("[Setup] Setting up static file serving...");
-      serveStatic(app);
-      log("[Setup] Static file serving configured");
-    }
+    // Simplified static file serving for now
+    log("[Setup] Setting up static file serving...");
+    serveStatic(app);
+    log("[Setup] Static file serving configured");
 
     const port = 5000;
     log("[Setup] About to start server on port " + port);
@@ -74,6 +50,7 @@ app.use((req, res, next) => {
     }, () => {
       log("[Ready] Server is now listening on port " + port);
       log("[Info] You can now view the site at: http://localhost:5000");
+      log("[Info] Test the API at: http://localhost:5000/api/test");
     });
 
   } catch (error) {
