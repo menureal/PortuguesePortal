@@ -2,7 +2,7 @@ import { Navigation } from "@/components/navigation";
 import { useState } from "react";
 import { clinicsData } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Star, Phone, Clock, MapPin } from "lucide-react";
+import { Building2, Star, Phone, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -89,22 +89,19 @@ export default function ClinicsPage() {
                       <h3 className="text-xl font-semibold mb-2">{clinic.name}</h3>
                       <div className="space-y-2">
                         <div className="flex items-center text-gray-600">
-                          <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <div>
-                            <p className="font-medium">{clinic.location}</p>
-                            <p className="text-sm">{clinic.address}</p>
-                          </div>
+                          <Building2 className="h-4 w-4 mr-2" />
+                          <p>{clinic.address}</p>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current flex-shrink-0" />
+                          <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
                           <span>{clinic.rating}</span>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+                          <Phone className="h-4 w-4 mr-2" />
                           <p>{clinic.phone}</p>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                          <Clock className="h-4 w-4 mr-2" />
                           <p>{clinic.hours}</p>
                         </div>
                         <div className="mt-2">
