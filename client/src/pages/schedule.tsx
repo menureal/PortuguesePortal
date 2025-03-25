@@ -4,8 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { doctorsData, clinicsData } from "@shared/schema";
 import { useLocation } from "wouter";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default function SchedulePage() {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [location] = useLocation();
 
@@ -27,6 +31,11 @@ export default function SchedulePage() {
   if (!doctor || !clinic) {
     return <div>Médico ou clínica não encontrado</div>;
   }
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    setSelectedTime(null); // Reset time when date changes
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,38 +70,46 @@ export default function SchedulePage() {
             <CardContent className="p-6">
               <h3 className="text-xl font-semibold mb-4">Agende a sua consulta</h3>
 
-              {/* Clinic Image */}
-              <div className="aspect-video rounded-lg overflow-hidden mb-6">
-                <img 
-                  src={clinic.photoUrl}
-                  alt={clinic.name}
-                  className="w-full h-full object-cover"
+              {/* Date Selection */}
+              <div className="mb-6">
+                <h4 className="font-medium mb-3">Selecione uma data:</h4>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  locale={ptBR}
+                  className="rounded-md border"
                 />
               </div>
 
               {/* Time Selection */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
-                <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                  {availableTimes.map((time) => (
-                    <Button
-                      key={time}
-                      variant={selectedTime === time ? "default" : "outline"}
-                      onClick={() => setSelectedTime(time)}
-                      className="w-full"
-                    >
-                      {time}
-                    </Button>
-                  ))}
+              {selectedDate && (
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">
+                    Horários Disponíveis para {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}:
+                  </h4>
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                    {availableTimes.map((time) => (
+                      <Button
+                        key={time}
+                        variant={selectedTime === time ? "default" : "outline"}
+                        onClick={() => setSelectedTime(time)}
+                        className="w-full"
+                      >
+                        {time}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Confirmation Button */}
               <Button 
                 className="w-full"
-                disabled={!selectedTime}
+                disabled={!selectedDate || !selectedTime}
                 onClick={() => {
-                  window.location.href = `/confirmar-agendamento?doctor=${doctorId}&clinic=${clinicId}&time=${selectedTime}`;
+                  const formattedDate = format(selectedDate!, "yyyy-MM-dd");
+                  window.location.href = `/confirmar-agendamento?doctor=${doctorId}&clinic=${clinicId}&date=${formattedDate}&time=${selectedTime}`;
                 }}
               >
                 Confirmar Agendamento
