@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { serveStatic, log } from "./vite";
+import { setupVite, log } from "./vite";
 import { setupWebSocket } from "./websocket";
 
 const app = express();
@@ -26,19 +26,11 @@ app.use((req, res, next) => {
     setupWebSocket(server);
     log("[Setup] WebSocket configured");
 
+    // Setup Vite in development mode
+    log("[Setup] Configuring Vite for development...");
+    await setupVite(app, server);
+    log("[Setup] Vite configured successfully");
 
-    // Basic error handling
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
-      log(`[Error] ${message}`);
-      res.status(status).json({ message });
-    });
-
-    // Simplified static file serving for now
-    log("[Setup] Setting up static file serving...");
-    serveStatic(app);
-    log("[Setup] Static file serving configured");
 
     const port = 5000;
     log("[Setup] About to start server on port " + port);
