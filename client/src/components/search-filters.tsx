@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { specialties } from "@shared/schema";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { format, addMonths, subMonths } from "date-fns";
+import { Search } from "lucide-react";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface SearchFiltersProps {
@@ -19,90 +19,65 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
   const [doctorName, setDoctorName] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [location, setLocation] = useState("");
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date>();
-
-  // Generate dates for the current month
-  const generateMonthDates = () => {
-    const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const dates = [];
-    for (let i = 0; i < 31; i++) {
-      const date = new Date(start);
-      date.setDate(date.getDate() + i);
-      if (date.getMonth() === currentMonth.getMonth()) {
-        dates.push(date);
-      }
-    }
-    return dates;
-  };
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">Encontre os melhores profissionais de saúde da sua região</h2>
-      <p className="text-gray-600 mb-6">
-        Agende sua consulta de forma rápida e segura com os melhores especialistas
-      </p>
+    <div className="max-w-4xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-semibold">Pesquise pelo Médico</h2>
+        <p className="text-gray-600 mt-2">
+          Digite o nome do profissional ou escolha uma especialidade. Filtre por localização para encontrar os médicos mais próximos.
+        </p>
+      </div>
 
-      {/* Search Section */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Search Fields */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             placeholder="Nome do médico..."
             value={doctorName}
             onChange={(e) => setDoctorName(e.target.value)}
-            className="h-12"
           />
           <Input
             placeholder="Especialidade..."
             value={specialty}
             onChange={(e) => setSpecialty(e.target.value)}
-            className="h-12"
           />
           <Input
             placeholder="Localização..."
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="h-12"
           />
         </div>
 
         {/* Date Selection */}
         <div>
           <h3 className="text-sm font-medium mb-2">Escolha a Data da Consulta</h3>
-          <div className="bg-white rounded-lg border p-4">
-            <div className="flex items-center justify-between mb-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="font-medium">
-                {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {generateMonthDates().map((date) => (
+          <div className="flex flex-wrap gap-2">
+            {[...Array(7)].map((_, i) => {
+              const date = new Date();
+              date.setDate(date.getDate() + i);
+              return (
                 <Button
-                  key={date.toISOString()}
+                  key={i}
                   variant={selectedDate?.toDateString() === date.toDateString() ? "default" : "outline"}
-                  className="min-w-[4rem] h-16 flex flex-col items-center justify-center p-1"
                   onClick={() => setSelectedDate(date)}
+                  className="flex-1 min-w-[100px] max-w-[150px] h-auto py-2"
                 >
-                  <span className="text-xs">{format(date, "EEE", { locale: ptBR })}</span>
-                  <span className="text-lg">{format(date, "d")}</span>
+                  <div className="text-center">
+                    <div className="text-xs uppercase">
+                      {format(date, "EEE", { locale: ptBR })}
+                    </div>
+                    <div className="text-lg font-semibold">
+                      {format(date, "dd")}
+                    </div>
+                    <div className="text-xs">
+                      {format(date, "MMM", { locale: ptBR })}
+                    </div>
+                  </div>
                 </Button>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
 
