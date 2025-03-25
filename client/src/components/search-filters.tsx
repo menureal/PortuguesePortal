@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { specialties } from "@shared/schema";
 import { Search } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SearchFiltersProps {
   onSearch: (filters: {
@@ -19,24 +28,27 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
   const [location, setLocation] = useState("");
 
   // Date selection state
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("2025");
+  const [day, setDay] = useState<string>("1");
+  const [month, setMonth] = useState<string>("3"); // March
+  const [year, setYear] = useState<string>("2025");
 
-  // Validate and create date object
+  // Generate arrays for days, months, and years
+  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+  const years = ["2025", "2026", "2027"];
+
+  // Get formatted month name
+  const getMonthName = (monthNumber: string) => {
+    return format(new Date(2025, parseInt(monthNumber) - 1), "MMMM", { locale: ptBR });
+  };
+
+  // Create valid date object
   const getSelectedDate = () => {
-    const d = parseInt(day);
-    const m = parseInt(month) - 1; // JS months are 0-based
-    const y = parseInt(year);
-
-    if (isNaN(d) || isNaN(m) || isNaN(y)) return undefined;
-
-    const date = new Date(y, m, d);
-    // Check if date is valid
-    if (date.getFullYear() !== y || date.getMonth() !== m || date.getDate() !== d) {
-      return undefined;
-    }
-    return date;
+    return new Date(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day)
+    );
   };
 
   return (
@@ -71,36 +83,45 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
         {/* Date Selection */}
         <div>
           <h3 className="text-sm font-medium mb-2">Escolha a Data da Consulta</h3>
-          <div className="flex gap-2 items-center">
-            <Input
-              type="number"
-              placeholder="Dia"
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-              min="1"
-              max="31"
-              className="w-20"
-            />
-            <span>/</span>
-            <Input
-              type="number"
-              placeholder="Mês"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              min="1"
-              max="12"
-              className="w-20"
-            />
-            <span>/</span>
-            <Input
-              type="number"
-              placeholder="Ano"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              min="2025"
-              max="2027"
-              className="w-24"
-            />
+          <div className="flex items-center gap-2">
+            <Select value={day} onValueChange={setDay}>
+              <SelectTrigger className="w-[80px]">
+                <SelectValue placeholder="Dia" />
+              </SelectTrigger>
+              <SelectContent>
+                {days.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={month} onValueChange={setMonth}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Mês" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {getMonthName(m)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={year} onValueChange={setYear}>
+              <SelectTrigger className="w-[90px]">
+                <SelectValue placeholder="Ano" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((y) => (
+                  <SelectItem key={y} value={y}>
+                    {y}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -128,10 +149,10 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
         {/* Search Button */}
         <Button 
           className="w-full md:w-auto h-12 px-8"
-          onClick={() => onSearch({ 
-            doctorName, 
-            specialty, 
-            location, 
+          onClick={() => onSearch({
+            doctorName,
+            specialty,
+            location,
             date: getSelectedDate()
           })}
         >
