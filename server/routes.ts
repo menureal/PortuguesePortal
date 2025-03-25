@@ -5,11 +5,6 @@ import { appointmentSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Rota de teste para verificar se o servidor está funcionando
-  app.get("/api/test", (_req, res) => {
-    res.json({ message: "Servidor está funcionando!" });
-  });
-
   app.post("/api/appointments", async (req, res) => {
     try {
       const data = appointmentSchema.parse(req.body);
