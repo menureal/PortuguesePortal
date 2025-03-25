@@ -27,8 +27,7 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Pesquise pelo Médico</h2>
         <p className="text-gray-600 mb-4">
-          Digite o nome do profissional ou escolha uma especialidade.
-          Filtre por localização para encontrar os médicos mais próximos.
+          Digite o nome do profissional ou escolha uma especialidade. Filtre por localização para encontrar os médicos mais próximos.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
@@ -56,16 +55,17 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Escolha a Data da Consulta</h2>
         <p className="text-gray-600 mb-4">
-          Selecione o dia em que deseja agendar sua consulta.
-          O sistema exibirá apenas os locais onde o médico estará disponível nessa data.
+          Selecione o dia em que deseja agendar sua consulta. O sistema exibirá apenas os locais onde o médico estará disponível nessa data.
         </p>
-        <div className="bg-white rounded-lg shadow p-4 max-w-sm">
+        <div className="inline-block bg-white rounded-lg shadow">
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
             locale={ptBR}
             className="rounded-md"
+            showOutsideDays={false}
+            fixedWeeks
           />
         </div>
       </div>
