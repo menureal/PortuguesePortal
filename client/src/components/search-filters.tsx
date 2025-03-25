@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { specialties } from "@shared/schema";
 import { Search } from "lucide-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 interface SearchFiltersProps {
   onSearch: (filters: {
@@ -19,7 +17,27 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
   const [doctorName, setDoctorName] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [location, setLocation] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  // Date selection state
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("2025");
+
+  // Validate and create date object
+  const getSelectedDate = () => {
+    const d = parseInt(day);
+    const m = parseInt(month) - 1; // JS months are 0-based
+    const y = parseInt(year);
+
+    if (isNaN(d) || isNaN(m) || isNaN(y)) return undefined;
+
+    const date = new Date(y, m, d);
+    // Check if date is valid
+    if (date.getFullYear() !== y || date.getMonth() !== m || date.getDate() !== d) {
+      return undefined;
+    }
+    return date;
+  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -53,31 +71,36 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
         {/* Date Selection */}
         <div>
           <h3 className="text-sm font-medium mb-2">Escolha a Data da Consulta</h3>
-          <div className="flex flex-wrap gap-2">
-            {[...Array(7)].map((_, i) => {
-              const date = new Date();
-              date.setDate(date.getDate() + i);
-              return (
-                <Button
-                  key={i}
-                  variant={selectedDate?.toDateString() === date.toDateString() ? "default" : "outline"}
-                  onClick={() => setSelectedDate(date)}
-                  className="flex-1 min-w-[100px] max-w-[150px] h-auto py-2"
-                >
-                  <div className="text-center">
-                    <div className="text-xs uppercase">
-                      {format(date, "EEE", { locale: ptBR })}
-                    </div>
-                    <div className="text-lg font-semibold">
-                      {format(date, "dd")}
-                    </div>
-                    <div className="text-xs">
-                      {format(date, "MMM", { locale: ptBR })}
-                    </div>
-                  </div>
-                </Button>
-              );
-            })}
+          <div className="flex gap-2 items-center">
+            <Input
+              type="number"
+              placeholder="Dia"
+              value={day}
+              onChange={(e) => setDay(e.target.value)}
+              min="1"
+              max="31"
+              className="w-20"
+            />
+            <span>/</span>
+            <Input
+              type="number"
+              placeholder="Mês"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              min="1"
+              max="12"
+              className="w-20"
+            />
+            <span>/</span>
+            <Input
+              type="number"
+              placeholder="Ano"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              min="2025"
+              max="2027"
+              className="w-24"
+            />
           </div>
         </div>
 
@@ -105,7 +128,12 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
         {/* Search Button */}
         <Button 
           className="w-full md:w-auto h-12 px-8"
-          onClick={() => onSearch({ doctorName, specialty, location, date: selectedDate })}
+          onClick={() => onSearch({ 
+            doctorName, 
+            specialty, 
+            location, 
+            date: getSelectedDate()
+          })}
         >
           <Search className="w-5 h-5 mr-2" />
           Buscar Médicos Disponíveis
