@@ -105,7 +105,7 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
             doctorName,
             specialty,
             location,
-            date: getSelectedDate()
+            date: selectedDate
           })}
         >
           <Search className="w-5 h-5 mr-2" />
