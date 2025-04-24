@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Navigation from "./components/navigation";
-import SearchFilters from "./components/search-filters";
+import { SearchFilters } from "./components/search-filters";
 import { Card, CardContent } from "./components/ui/card";
 import { Clock, Smartphone, CalendarCheck } from "lucide-react";
 
@@ -15,7 +15,7 @@ export default function Home() {
     <div className="min-h-screen relative">
       {/* Background Image with Overlay */}
       <div 
-        className="absolute inset-0 bg-[url('/medical-bg.jpg')] bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1504813184591-01572f98c85f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80')"
         }}

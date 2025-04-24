@@ -1,10 +1,9 @@
-import React from 'react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SoSaude.cv - Agendamento de Consultas Médicas',
-  description: 'Sistema de agendamento de consultas médicas para Cabo Verde',
+  title: 'SoSaude.cv - Agendamento Médico em Cabo Verde',
+  description: 'Agende consultas médicas com os melhores profissionais de saúde em Cabo Verde',
 };
 
 export default function RootLayout({
