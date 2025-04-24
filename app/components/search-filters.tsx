@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { specialties } from "../../shared/schema";
+import { specialties } from "../lib/schema";
 import { Search } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
