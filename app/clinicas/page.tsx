@@ -10,14 +10,14 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 
 // Agrupar clínicas por tipo
-const groupClinicsByType = (clinics: any[]) => {
+const groupClinicsByType = (clinics: typeof clinicsData) => {
   return clinics.reduce((acc, clinic) => {
     if (!acc[clinic.type]) {
       acc[clinic.type] = [];
     }
     acc[clinic.type].push(clinic);
     return acc;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, typeof clinicsData>);
 };
 
 export default function ClinicsPage() {

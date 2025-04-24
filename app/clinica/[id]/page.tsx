@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Navigation from "../../components/navigation";
-import { clinicsData, doctorsData } from "../../../shared/schema";
+import { clinicsData, doctorsData } from "../../lib/schema";
 import { Card, CardContent } from "../../components/ui/card";
 import { Building2, Star, Phone, Clock, MapPin } from "lucide-react";
 import { Button } from "../../components/ui/button";

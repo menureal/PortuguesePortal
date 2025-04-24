@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Navigation from "../components/navigation";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { doctorsData, clinicsData } from "../../shared/schema";
+import { doctorsData, clinicsData } from "../lib/schema";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DateSelector from "../components/date-selector";
@@ -17,8 +17,8 @@ export default function SchedulePage() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   // Parse URL parameters
-  const doctorId = parseInt(searchParams.get('doctor') || '0');
-  const clinicId = parseInt(searchParams.get('clinic') || '0');
+  const doctorId = parseInt(searchParams.get("doctor") || "0");
+  const clinicId = parseInt(searchParams.get("clinic") || "0");
 
   // Get doctor and clinic data
   const doctor = doctorsData.find(d => d.id === doctorId);
