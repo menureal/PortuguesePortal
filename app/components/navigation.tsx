@@ -1,16 +1,16 @@
 'use client';
 
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
-import { useState } from "react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "./ui/sheet";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);

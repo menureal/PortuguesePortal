@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Navigation from "@/components/navigation";
 import SearchFilters from "@/components/search-filters";
 import { Card, CardContent } from "@/components/ui/card";

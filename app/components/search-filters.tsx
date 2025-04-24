@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { specialties } from "@/lib/schema";
+import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { specialties } from "../lib/schema";
 import { Search } from "lucide-react";
-import DateSelector from "@/components/date-selector";
+import DateSelector from "./date-selector";
 
 interface SearchFiltersProps {
   onSearch: (filters: {
