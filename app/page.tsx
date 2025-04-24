@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Navigation from "@/components/navigation";
-import SearchFilters from "@/components/search-filters";
-import { Card, CardContent } from "@/components/ui/card";
+import Navigation from "./components/navigation";
+import SearchFilters from "./components/search-filters";
+import { Card, CardContent } from "./components/ui/card";
 import { Clock, Smartphone, CalendarCheck } from "lucide-react";
 
 export default function Home() {
