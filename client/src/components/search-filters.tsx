@@ -5,6 +5,7 @@ import { specialties } from "@shared/schema";
 import { Search } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { DateSelector } from "@/components/date-selector";
 import {
   Select,
   SelectContent,
@@ -28,27 +29,12 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
   const [location, setLocation] = useState("");
 
   // Date selection state
-  const [day, setDay] = useState<string>("1");
-  const [month, setMonth] = useState<string>("3"); // March
-  const [year, setYear] = useState<string>("2025");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  // Generate arrays for days, months, and years
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years = ["2025", "2026", "2027"];
-
-  // Get formatted month name
-  const getMonthName = (monthNumber: string) => {
-    return format(new Date(2025, parseInt(monthNumber) - 1), "MMMM", { locale: ptBR });
-  };
-
-  // Create valid date object
-  const getSelectedDate = () => {
-    return new Date(
-      parseInt(year),
-      parseInt(month) - 1,
-      parseInt(day)
-    );
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setSelectedDate(date);
+    }
   };
 
   return (
@@ -83,45 +69,11 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
         {/* Date Selection */}
         <div>
           <h3 className="text-sm font-medium mb-2">Escolha a Data da Consulta</h3>
-          <div className="flex items-center gap-2">
-            <Select value={day} onValueChange={setDay}>
-              <SelectTrigger className="w-[80px]">
-                <SelectValue placeholder="Dia" />
-              </SelectTrigger>
-              <SelectContent>
-                {days.map((d) => (
-                  <SelectItem key={d} value={d}>
-                    {d}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Mês" />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((m) => (
-                  <SelectItem key={m} value={m}>
-                    {getMonthName(m)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={year} onValueChange={setYear}>
-              <SelectTrigger className="w-[90px]">
-                <SelectValue placeholder="Ano" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((y) => (
-                  <SelectItem key={y} value={y}>
-                    {y}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="p-2 border rounded-md inline-block">
+            <DateSelector 
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+            />
           </div>
         </div>
 

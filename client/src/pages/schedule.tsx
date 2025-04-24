@@ -4,9 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { doctorsData, clinicsData } from "@shared/schema";
 import { useLocation } from "wouter";
-import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { DateSelector } from "@/components/date-selector";
 
 export default function SchedulePage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -73,13 +73,12 @@ export default function SchedulePage() {
               {/* Date Selection */}
               <div className="mb-6">
                 <h4 className="font-medium mb-3">Selecione uma data:</h4>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={handleDateSelect}
-                  locale={ptBR}
-                  className="rounded-md border"
-                />
+                <div className="p-4 rounded-md border">
+                  <DateSelector
+                    selectedDate={selectedDate}
+                    onDateSelect={handleDateSelect}
+                  />
+                </div>
               </div>
 
               {/* Time Selection */}
