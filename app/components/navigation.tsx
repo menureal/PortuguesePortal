@@ -1,6 +1,6 @@
 'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,10 @@ export default function Navigation() {
     <nav className="bg-white/95 backdrop-blur-lg border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-            Logo
+          <Link href="/">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              Logo
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,10 +59,11 @@ export default function Navigation() {
                 </SheetHeader>
                 <div className="px-4 py-2 flex flex-col space-y-2">
                   {navItems.map((item) => (
-                    <Link key={item.href} href={item.href} onClick={() => setIsOpen(false)}>
+                    <Link key={item.href} href={item.href}>
                       <Button
                         variant="ghost"
                         className="w-full justify-start text-gray-700 hover:text-blue-600"
+                        onClick={() => setIsOpen(false)}
                       >
                         {item.label}
                       </Button>
