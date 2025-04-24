@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Navigation from "../../components/navigation";
 import { doctorsData, clinicsData } from "../../../shared/schema";
 import { Card, CardContent } from "../../components/ui/card";
 import { Star, Clock, Building2, Phone } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { useRouter } from 'next/navigation';
 
-interface DoctorProfilePageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function DoctorProfilePage({ params }: DoctorProfilePageProps) {
+export default function DoctorProfilePage() {
+  const params = useParams();
   const router = useRouter();
-  const doctorId = parseInt(params.id);
+  const doctorId = params?.id ? parseInt(params.id as string) : null;
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const doctor = doctorsData.find(d => d.id === doctorId);

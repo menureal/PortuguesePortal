@@ -11,13 +11,13 @@ import { Button } from "../components/ui/button";
 
 // Agrupar clínicas por tipo
 const groupClinicsByType = (clinics: any[]) => {
-  return clinics.reduce((acc: {[key: string]: any[]}, clinic) => {
+  return clinics.reduce((acc, clinic) => {
     if (!acc[clinic.type]) {
       acc[clinic.type] = [];
     }
     acc[clinic.type].push(clinic);
     return acc;
-  }, {});
+  }, {} as Record<string, any[]>);
 };
 
 export default function ClinicsPage() {
@@ -26,7 +26,7 @@ export default function ClinicsPage() {
 
   const filteredClinics = clinicsData.filter(clinic => {
     const matchSpecialty = !searchSpecialty || 
-      clinic.specialties.some(spec => 
+      clinic.specialties.some((spec: string) => 
         spec.toLowerCase().includes(searchSpecialty.toLowerCase())
       );
     const matchLocation = !searchLocation || 
@@ -77,7 +77,7 @@ export default function ClinicsPage() {
           <div key={type} className="mb-12">
             <h2 className="text-2xl font-semibold mb-6">{type}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {clinics.map((clinic: any) => (
+              {clinics.map((clinic) => (
                 <Link key={clinic.id} href={`/clinica/${clinic.id}`}>
                   <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                     <div className="aspect-video relative">

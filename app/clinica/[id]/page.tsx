@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Navigation from "../../components/navigation";
 import { clinicsData, doctorsData } from "../../../shared/schema";
 import { Card, CardContent } from "../../components/ui/card";
@@ -8,14 +9,10 @@ import { Building2, Star, Phone, Clock, MapPin } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
-interface ClinicDetailsPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function ClinicDetailsPage({ params }: ClinicDetailsPageProps) {
-  const clinicId = parseInt(params.id);
+export default function ClinicDetailsPage() {
+  const params = useParams();
+  const router = useRouter();
+  const clinicId = params?.id ? parseInt(params.id as string) : null;
   const [selectedDoctor, setSelectedDoctor] = useState<any>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
@@ -185,6 +182,9 @@ export default function ClinicDetailsPage({ params }: ClinicDetailsPageProps) {
                   <Button 
                     className="w-full mt-6" 
                     disabled={!selectedTime}
+                    onClick={() => {
+                      router.push(`/confirmar-agendamento?doctor=${selectedDoctor.id}&clinic=${clinic.id}&time=${selectedTime}`);
+                    }}
                   >
                     Confirmar Agendamento
                   </Button>
