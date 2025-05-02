@@ -8,11 +8,15 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Star, Clock, Building2, Phone } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import DateSelector from "../../components/date-selector";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default function DoctorProfilePage() {
   const params = useParams();
   const router = useRouter();
   const doctorId = params?.id ? parseInt(params.id as string) : null;
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const doctor = doctorsData.find(d => d.id === doctorId);
@@ -92,22 +96,40 @@ export default function DoctorProfilePage() {
               <CardContent className="p-6">
                 <h2 className="text-2xl font-semibold mb-6">Agende sua Consulta</h2>
 
-                {/* Time Selection */}
+                {/* Date Selection */}
                 <div className="mb-6">
-                  <h4 className="font-medium mb-3">Horários Disponíveis:</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                    {availableTimes.map((time) => (
-                      <Button
-                        key={time}
-                        variant={selectedTime === time ? "default" : "outline"}
-                        onClick={() => setSelectedTime(time)}
-                        className="w-full"
-                      >
-                        {time}
-                      </Button>
-                    ))}
+                  <h4 className="font-medium mb-3">Selecione uma data:</h4>
+                  <div className="p-4 rounded-md border mb-6">
+                    <DateSelector
+                      onDateSelect={(date) => {
+                        setSelectedDate(date);
+                        setSelectedTime(null);
+                      }}
+                      selectedDate={selectedDate}
+                    />
                   </div>
                 </div>
+
+                {/* Time Selection */}
+                {selectedDate && (
+                  <div className="mb-6">
+                    <h4 className="font-medium mb-3">
+                      Horários Disponíveis para {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}:
+                    </h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                      {availableTimes.map((time) => (
+                        <Button
+                          key={time}
+                          variant={selectedTime === time ? "default" : "outline"}
+                          onClick={() => setSelectedTime(time)}
+                          className="w-full"
+                        >
+                          {time}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Patient Information */}
                 <div className="space-y-4 mb-6">
@@ -133,9 +155,10 @@ export default function DoctorProfilePage() {
 
                 <Button 
                   className="w-full mt-6" 
-                  disabled={!selectedTime}
+                  disabled={!selectedDate || !selectedTime}
                   onClick={() => {
-                    router.push(`/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}&time=${selectedTime}`);
+                    const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
+                    router.push(`/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}&date=${formattedDate}&time=${selectedTime}`);
                   }}
                 >
                   Confirmar Agendamento

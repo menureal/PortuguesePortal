@@ -56,7 +56,7 @@ function getWebSocketServer() {
               break;
               
             case 'RELEASE_SLOT':
-              // Release a held slot if booking is cancelled/expired
+              // Release a previously held slot
               const releaseKey = `${data.doctorId}-${data.date}`;
               activeAppointments.get(releaseKey)?.delete(data.time);
               
@@ -73,9 +73,12 @@ function getWebSocketServer() {
                 }
               });
               break;
+              
+            default:
+              console.log('Unknown message type:', data.type);
           }
         } catch (error) {
-          console.error('Error processing WebSocket message:', error);
+          console.error('Failed to parse WebSocket message:', error);
         }
       });
       
@@ -84,7 +87,10 @@ function getWebSocketServer() {
       });
     });
     
-    server.listen(3001);
+    const PORT = 3001;
+    server.listen(PORT, () => {
+      console.log(`WebSocket server is listening on port ${PORT}`);
+    });
   }
   
   return wss;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Navigation from "../components/navigation";
 import { Button } from "../components/ui/button";
@@ -9,6 +9,7 @@ import { doctorsData, clinicsData } from "../lib/schema";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import DateSelector from "../components/date-selector";
+import { useAvailability } from "../hooks/use-availability";
 
 export default function SchedulePage() {
   const searchParams = useSearchParams();
@@ -24,7 +25,10 @@ export default function SchedulePage() {
   const doctor = doctorsData.find(d => d.id === doctorId);
   const clinic = clinicsData.find(c => c.id === clinicId);
 
-  // Mock available times
+  // Usar o hook de disponibilidade para atualizar em tempo real
+  const { availabilityStatus, holdTimeSlot } = useAvailability(doctorId, selectedDate);
+
+  // Horários padrão
   const availableTimes = [
     "09:00", "09:30", "10:00", "10:30", "11:00",
     "14:00", "14:30", "15:00", "15:30", "16:00"
@@ -37,6 +41,15 @@ export default function SchedulePage() {
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     setSelectedTime(null); // Reset time when date changes
+  };
+  
+  // Selecionar um horário e segurar a reserva
+  const handleTimeSelect = (time: string) => {
+    // Se este horário não estiver explicitamente marcado como indisponível
+    if (availabilityStatus[time] !== false) {
+      setSelectedTime(time);
+      holdTimeSlot(time); // Reservar temporariamente
+    }
   };
 
   return (
@@ -90,17 +103,27 @@ export default function SchedulePage() {
                     Horários Disponíveis para {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}:
                   </h4>
                   <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                    {availableTimes.map((time) => (
-                      <Button
-                        key={time}
-                        variant={selectedTime === time ? "default" : "outline"}
-                        onClick={() => setSelectedTime(time)}
-                        className="w-full"
-                      >
-                        {time}
-                      </Button>
-                    ))}
+                    {availableTimes.map((time) => {
+                      const isAvailable = availabilityStatus[time] !== false;
+                      return (
+                        <Button
+                          key={time}
+                          variant={selectedTime === time ? "default" : "outline"}
+                          onClick={() => handleTimeSelect(time)}
+                          className="w-full"
+                          disabled={!isAvailable}
+                        >
+                          {time}
+                          {!isAvailable && (
+                            <span className="ml-1 text-xs text-red-500">•</span>
+                          )}
+                        </Button>
+                      );
+                    })}
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    <span className="text-red-500">•</span> Horários indisponíveis
+                  </p>
                 </div>
               )}
 

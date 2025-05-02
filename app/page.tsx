@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navigation from "./components/navigation";
 import SearchFilters from "./components/search-filters";
 import { Card, CardContent } from "./components/ui/card";
@@ -10,6 +10,18 @@ export default function Home() {
   const handleSearch = (filters: any) => {
     console.log("Search filters:", filters);
   };
+
+  // Inicializar o WebSocket quando a página carrega
+  useEffect(() => {
+    // Inicializar o servidor WebSocket fazendo uma requisição GET para a rota
+    fetch('/api/ws')
+      .then(response => {
+        console.log('WebSocket API initialized:', response.status);
+      })
+      .catch(error => {
+        console.error('Error initializing WebSocket API:', error);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen relative">
