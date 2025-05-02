@@ -1,35 +1,26 @@
-'use client';
-
-import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import React from 'react';
+import { notFound } from 'next/navigation';
 import Navigation from "../../components/navigation";
 import { doctorsData, clinicsData } from "../../lib/schema";
 import { Card, CardContent } from "../../components/ui/card";
 import { Star, Clock, Building2, Phone } from "lucide-react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import DateSelector from "../../components/date-selector";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import DoctorAppointment from './doctor-appointment';
 
-export default function DoctorProfilePage() {
-  const params = useParams();
-  const router = useRouter();
-  const doctorId = params?.id ? parseInt(params.id as string) : null;
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+interface DoctorProfilePageProps {
+  params: { id: string }
+}
 
+// Server Component para a página de perfil do médico
+export default function DoctorProfilePage({ params }: DoctorProfilePageProps) {
+  const doctorId = parseInt(params.id);
+  
+  // Buscar dados do médico e clínica
   const doctor = doctorsData.find(d => d.id === doctorId);
   const clinic = doctor ? clinicsData.find(c => c.id === doctor.clinicId) : null;
 
-  // Mock available times
-  const availableTimes = [
-    "09:00", "09:30", "10:00", "10:30", "11:00",
-    "14:00", "14:30", "15:00", "15:30", "16:00"
-  ];
-
+  // Usar notFound do Next.js para lidar com médicos inexistentes
   if (!doctor || !clinic) {
-    return <div>Médico não encontrado</div>;
+    notFound();
   }
 
   return (
@@ -90,81 +81,9 @@ export default function DoctorProfilePage() {
             </Card>
           </div>
 
-          {/* Scheduling Section */}
+          {/* Scheduling Section - Client Component */}
           <div className="lg:col-span-2">
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-semibold mb-6">Agende sua Consulta</h2>
-
-                {/* Date Selection */}
-                <div className="mb-6">
-                  <h4 className="font-medium mb-3">Selecione uma data:</h4>
-                  <div className="p-4 rounded-md border mb-6">
-                    <DateSelector
-                      onDateSelect={(date) => {
-                        setSelectedDate(date);
-                        setSelectedTime(null);
-                      }}
-                      selectedDate={selectedDate}
-                    />
-                  </div>
-                </div>
-
-                {/* Time Selection */}
-                {selectedDate && (
-                  <div className="mb-6">
-                    <h4 className="font-medium mb-3">
-                      Horários Disponíveis para {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}:
-                    </h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                      {availableTimes.map((time) => (
-                        <Button
-                          key={time}
-                          variant={selectedTime === time ? "default" : "outline"}
-                          onClick={() => setSelectedTime(time)}
-                          className="w-full"
-                        >
-                          {time}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Patient Information */}
-                <div className="space-y-4 mb-6">
-                  <h4 className="font-medium">Informações do Paciente</h4>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Input placeholder="Nome completo" className="w-full" />
-                    <Input type="email" placeholder="Email" className="w-full" />
-                    <Input placeholder="Contato" className="w-full sm:col-span-2" />
-                  </div>
-                </div>
-
-                {/* Payment Information */}
-                <div className="space-y-4">
-                  <h4 className="font-medium">Pagamento</h4>
-                  <div className="grid gap-4">
-                    <Input placeholder="Número do Cartão" className="w-full" />
-                    <div className="grid grid-cols-2 gap-3">
-                      <Input placeholder="Data Validade" className="w-full" />
-                      <Input placeholder="CCV" className="w-full" />
-                    </div>
-                  </div>
-                </div>
-
-                <Button 
-                  className="w-full mt-6" 
-                  disabled={!selectedDate || !selectedTime}
-                  onClick={() => {
-                    const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
-                    router.push(`/confirmar-agendamento?doctor=${doctor.id}&clinic=${clinic.id}&date=${formattedDate}&time=${selectedTime}`);
-                  }}
-                >
-                  Confirmar Agendamento
-                </Button>
-              </CardContent>
-            </Card>
+            <DoctorAppointment doctorId={doctor.id} clinicId={clinic.id} />
           </div>
         </div>
       </main>

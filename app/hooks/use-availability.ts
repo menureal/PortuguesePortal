@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useWebSocket } from '../api/ws/websocket-provider';
 
 type AvailabilityStatus = {
   [key: string]: boolean;
@@ -16,48 +17,22 @@ type SlotUpdateMessage = {
 
 /**
  * Hook para gerenciar disponibilidade de horários em tempo real via WebSocket
+ * Agora usa o WebSocketProvider para gerenciar conexões
  */
 export function useAvailability(doctorId: number, selectedDate: Date | undefined) {
   const [availabilityStatus, setAvailabilityStatus] = useState<AvailabilityStatus>({});
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const { socket, isConnected, sendMessage } = useWebSocket();
 
   // Formatamos a data para string no formato YYYY-MM-DD para uso nas chaves
   const formattedDate = selectedDate 
     ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}` 
     : '';
 
-  // Inicializa conexão WebSocket
+  // Configurar listener para mensagens do WebSocket
   useEffect(() => {
-    // Se não tivermos uma data selecionada, não precisamos verificar disponibilidade ainda
-    if (!selectedDate) return;
-
-    // Determinar o protocolo (ws ou wss) baseado no protocolo da página
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/api/ws`;
-
-    const newSocket = new WebSocket(wsUrl);
+    if (!socket) return;
     
-    newSocket.onopen = () => {
-      console.log('WebSocket conectado');
-      setIsConnected(true);
-      
-      // Verifica disponibilidade inicial quando conecta
-      if (doctorId && formattedDate) {
-        checkSlotAvailability(newSocket, doctorId, formattedDate);
-      }
-    };
-    
-    newSocket.onclose = () => {
-      console.log('WebSocket desconectado');
-      setIsConnected(false);
-    };
-    
-    newSocket.onerror = (error) => {
-      console.error('Erro no WebSocket:', error);
-    };
-    
-    newSocket.onmessage = (event) => {
+    const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data) as SlotUpdateMessage;
         
@@ -74,43 +49,44 @@ export function useAvailability(doctorId: number, selectedDate: Date | undefined
       }
     };
     
-    setSocket(newSocket);
+    socket.addEventListener('message', handleMessage);
     
-    // Limpar ao desmontar
+    // Verificar disponibilidade inicial quando o WebSocket conecta e temos uma data selecionada
+    if (isConnected && doctorId && formattedDate) {
+      checkSlotAvailability();
+    }
+    
+    // Limpar listener ao desmontar
     return () => {
-      if (newSocket.readyState === WebSocket.OPEN) {
-        newSocket.close();
-      }
+      socket.removeEventListener('message', handleMessage);
     };
-  }, [selectedDate, doctorId]);
+  }, [socket, isConnected, doctorId, formattedDate]);
 
   // Quando a data ou o médico mudar, verificar disponibilidade novamente
   useEffect(() => {
-    if (isConnected && socket && doctorId && formattedDate) {
-      checkSlotAvailability(socket, doctorId, formattedDate);
+    if (isConnected && doctorId && formattedDate) {
+      checkSlotAvailability();
     }
   }, [doctorId, formattedDate, isConnected]);
 
   // Função para verificar se um slot específico está disponível
-  const checkSlotAvailability = (ws: WebSocket, docId: number, date: string) => {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({
-        type: 'CHECK_SLOT',
-        doctorId: docId,
-        date: date
-      }));
-    }
+  const checkSlotAvailability = () => {
+    sendMessage({
+      type: 'CHECK_SLOT',
+      doctorId,
+      date: formattedDate
+    });
   };
 
   // Função para temporariamente reservar um slot
   const holdTimeSlot = (time: string) => {
-    if (socket?.readyState === WebSocket.OPEN && doctorId && formattedDate) {
-      socket.send(JSON.stringify({
+    if (isConnected && doctorId && formattedDate) {
+      sendMessage({
         type: 'HOLD_SLOT',
-        doctorId: doctorId,
+        doctorId,
         date: formattedDate,
-        time: time
-      }));
+        time
+      });
       
       // Atualiza localmente
       setAvailabilityStatus(prev => ({
@@ -125,13 +101,13 @@ export function useAvailability(doctorId: number, selectedDate: Date | undefined
 
   // Função para liberar um slot reservado
   const releaseTimeSlot = (time: string) => {
-    if (socket?.readyState === WebSocket.OPEN && doctorId && formattedDate) {
-      socket.send(JSON.stringify({
+    if (isConnected && doctorId && formattedDate) {
+      sendMessage({
         type: 'RELEASE_SLOT',
-        doctorId: doctorId,
+        doctorId,
         date: formattedDate,
-        time: time
-      }));
+        time
+      });
       
       // Atualiza localmente
       setAvailabilityStatus(prev => ({

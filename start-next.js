@@ -1,14 +1,17 @@
-const { exec } = require('child_process');
-const nextProcess = exec('npx next dev');
+#!/usr/bin/env node
 
-nextProcess.stdout.on('data', (data) => {
-  console.log(`[Next.js] ${data}`);
+import { spawn } from 'child_process';
+const nextDev = spawn('npx', ['next', 'dev'], { stdio: 'inherit' });
+
+nextDev.on('close', (code) => {
+  console.log(`Next.js dev server exited with code ${code}`);
+  process.exit(code);
 });
 
-nextProcess.stderr.on('data', (data) => {
-  console.error(`[Next.js Error] ${data}`);
+process.on('SIGINT', () => {
+  nextDev.kill('SIGINT');
 });
 
-nextProcess.on('close', (code) => {
-  console.log(`Next.js process exited with code ${code}`);
+process.on('SIGTERM', () => {
+  nextDev.kill('SIGTERM');
 });

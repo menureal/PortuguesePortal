@@ -1,36 +1,26 @@
-'use client';
-
-import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import React from 'react';
+import { notFound } from 'next/navigation';
 import Navigation from "../../components/navigation";
 import { clinicsData, doctorsData } from "../../lib/schema";
 import { Card, CardContent } from "../../components/ui/card";
 import { Building2, Star, Phone, Clock, MapPin } from "lucide-react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import DateSelector from "../../components/date-selector";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import ClinicAppointment from './clinic-appointment';
 
-export default function ClinicDetailsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const clinicId = params?.id ? parseInt(params.id as string) : null;
-  const [selectedDoctor, setSelectedDoctor] = useState<any>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+interface ClinicDetailsPageProps {
+  params: { id: string }
+}
 
+// Página agora usa Server Component
+export default function ClinicDetailsPage({ params }: ClinicDetailsPageProps) {
+  const clinicId = parseInt(params.id);
+  
+  // Buscar dados da clínica e médicos associados
   const clinic = clinicsData.find(c => c.id === clinicId);
   const clinicDoctors = doctorsData.filter(d => d.clinicId === clinicId);
 
-  // Mock available times
-  const availableTimes = [
-    "09:00", "09:30", "10:00", "10:30", "11:00",
-    "14:00", "14:30", "15:00", "15:30", "16:00"
-  ];
-
+  // Usar notFound do Next.js para lidar com clínicas inexistentes
   if (!clinic) {
-    return <div>Clínica não encontrada</div>;
+    notFound();
   }
 
   return (
@@ -97,125 +87,8 @@ export default function ClinicDetailsPage() {
           </CardContent>
         </Card>
 
-        {/* Doctors List and Scheduling */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Doctors List */}
-          <div className="lg:col-span-1">
-            <h2 className="text-2xl font-semibold mb-6">Médicos</h2>
-            <div className="space-y-4">
-              {clinicDoctors.map((doctor) => (
-                <Card 
-                  key={doctor.id} 
-                  className={`cursor-pointer transition-all ${selectedDoctor?.id === doctor.id ? 'ring-2 ring-primary' : 'hover:shadow-lg'}`}
-                  onClick={() => setSelectedDoctor(doctor)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full overflow-hidden">
-                        <img 
-                          src={doctor.photoUrl}
-                          alt={doctor.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{doctor.name}</h3>
-                        <p className="text-primary text-sm">{doctor.specialty}</p>
-                        <p className="text-gray-600 text-sm">CRM: {doctor.crm}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Scheduling Section */}
-          {selectedDoctor && (
-            <div className="lg:col-span-2">
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-semibold mb-6">Agende a sua consulta</h2>
-
-                  {/* Doctor Details */}
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-start gap-4">
-                      <img 
-                        src={selectedDoctor.photoUrl}
-                        alt={selectedDoctor.name}
-                        className="w-20 h-20 rounded-full object-cover"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-lg">{selectedDoctor.name}</h3>
-                        <p className="text-gray-600">{selectedDoctor.specialty}</p>
-                        <p className="text-gray-600 text-sm">CRM: {selectedDoctor.crm}</p>
-                        <p className="text-sm text-gray-500 mt-2">
-                          Disponível em: {selectedDoctor.availability?.join(", ") || "Não disponível"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Date Selection */}
-                  <div className="mb-6">
-                    <h4 className="font-medium mb-3">Selecione uma data:</h4>
-                    <div className="p-4 rounded-md border mb-6">
-                      <DateSelector
-                        onDateSelect={(date) => {
-                          setSelectedDate(date);
-                          setSelectedTime(null);
-                        }}
-                        selectedDate={selectedDate}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Time Selection */}
-                  {selectedDate && (
-                    <div className="mb-6">
-                      <h4 className="font-medium mb-3">
-                        Horários Disponíveis para {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}:
-                      </h4>
-                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
-                        {availableTimes.map((time) => (
-                          <Button
-                            key={time}
-                            variant={selectedTime === time ? "default" : "outline"}
-                            onClick={() => setSelectedTime(time)}
-                            className="w-full"
-                          >
-                            {time}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Patient Information */}
-                  <div className="space-y-4 mb-6">
-                    <h4 className="font-medium">Informações do Paciente</h4>
-                    <div className="grid gap-4">
-                      <Input placeholder="Nome completo" />
-                      <Input type="email" placeholder="Email" />
-                      <Input placeholder="Contato" />
-                    </div>
-                  </div>
-
-                  <Button 
-                    className="w-full mt-6" 
-                    disabled={!selectedDate || !selectedTime}
-                    onClick={() => {
-                      const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
-                      router.push(`/confirmar-agendamento?doctor=${selectedDoctor.id}&clinic=${clinic.id}&date=${formattedDate}&time=${selectedTime}`);
-                    }}
-                  >
-                    Confirmar Agendamento
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
+        {/* Componente client para agendamento */}
+        <ClinicAppointment clinic={clinic} doctors={clinicDoctors} />
       </main>
     </div>
   );

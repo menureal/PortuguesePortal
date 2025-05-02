@@ -1,110 +1,128 @@
-import { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { WebSocketServer } from 'ws';
-import { createServer } from 'http';
 
-// Store active appointments to track real-time availability
-const activeAppointments = new Map<string, Set<string>>();
+// Este objeto vai guardar a instância do servidor WebSocket
 let wss: WebSocketServer | null = null;
 
-// Initialize WebSocket server
+// Função para obter ou criar o servidor WebSocket
 function getWebSocketServer() {
-  if (wss === null) {
-    const server = createServer();
-    wss = new WebSocketServer({ server, path: '/api/ws' });
+  if (!wss) {
+    // Criar um novo servidor WebSocket em um port específico
+    wss = new WebSocketServer({ port: 5001 });
+    
+    console.log('WebSocket server started on port 5001');
+    
+    // Mock de gerenciamento de disponibilidade de horários
+    const availabilityStatus: Record<string, Record<string, Record<string, boolean>>> = {};
     
     wss.on('connection', (ws) => {
-      console.log('Client connected to WebSocket');
+      console.log('New WebSocket client connected');
       
       ws.on('message', (message) => {
         try {
           const data = JSON.parse(message.toString());
+          console.log('Received message:', data);
           
-          switch (data.type) {
-            case 'CHECK_SLOT':
-              // Check if slot is available
-              const key = `${data.doctorId}-${data.date}`;
-              const slots = activeAppointments.get(key) || new Set();
+          // Gerenciar diferentes tipos de mensagens
+          if (data.type === 'CHECK_SLOT') {
+            const { doctorId, date } = data;
+            
+            // Inicializar a estrutura se não existir
+            if (!availabilityStatus[doctorId]) {
+              availabilityStatus[doctorId] = {};
+            }
+            if (!availabilityStatus[doctorId][date]) {
+              // Gerar disponibilidade aleatória para horários
+              availabilityStatus[doctorId][date] = {
+                '09:00': Math.random() > 0.3,
+                '09:30': Math.random() > 0.3,
+                '10:00': Math.random() > 0.3,
+                '10:30': Math.random() > 0.3,
+                '11:00': Math.random() > 0.3,
+                '14:00': Math.random() > 0.3,
+                '14:30': Math.random() > 0.3,
+                '15:00': Math.random() > 0.3,
+                '15:30': Math.random() > 0.3,
+                '16:00': Math.random() > 0.3,
+              };
+            }
+            
+            // Enviar o status de todos os slots para esse médico/data
+            const slots = availabilityStatus[doctorId][date];
+            Object.entries(slots).forEach(([time, available]) => {
               ws.send(JSON.stringify({
                 type: 'SLOT_STATUS',
-                doctorId: data.doctorId,
-                date: data.date,
-                time: data.time,
-                available: !slots.has(data.time)
+                doctorId,
+                date,
+                time,
+                available
               }));
-              break;
+            });
+          }
+          
+          // Reservar temporariamente um slot
+          else if (data.type === 'HOLD_SLOT') {
+            const { doctorId, date, time } = data;
+            
+            if (availabilityStatus[doctorId]?.[date]?.[time] !== false) {
+              availabilityStatus[doctorId][date][time] = false;
               
-            case 'HOLD_SLOT':
-              // Temporarily hold a slot while user completes booking
-              const holdKey = `${data.doctorId}-${data.date}`;
-              if (!activeAppointments.has(holdKey)) {
-                activeAppointments.set(holdKey, new Set());
-              }
-              activeAppointments.get(holdKey)?.add(data.time);
-              
-              // Broadcast slot hold to all clients
-              wss?.clients.forEach(client => {
-                if (client.readyState === ws.OPEN) {
+              // Notificar todos os clientes sobre a alteração
+              wss?.clients.forEach((client) => {
+                if (client.readyState === client.OPEN) {
                   client.send(JSON.stringify({
                     type: 'SLOT_UPDATED',
-                    doctorId: data.doctorId,
-                    date: data.date,
-                    time: data.time,
+                    doctorId,
+                    date,
+                    time,
                     available: false
                   }));
                 }
               });
-              break;
+            }
+          }
+          
+          // Liberar um slot reservado
+          else if (data.type === 'RELEASE_SLOT') {
+            const { doctorId, date, time } = data;
+            
+            if (availabilityStatus[doctorId]?.[date]?.[time] === false) {
+              availabilityStatus[doctorId][date][time] = true;
               
-            case 'RELEASE_SLOT':
-              // Release a previously held slot
-              const releaseKey = `${data.doctorId}-${data.date}`;
-              activeAppointments.get(releaseKey)?.delete(data.time);
-              
-              // Broadcast slot release to all clients
-              wss?.clients.forEach(client => {
-                if (client.readyState === ws.OPEN) {
+              // Notificar todos os clientes sobre a alteração
+              wss?.clients.forEach((client) => {
+                if (client.readyState === client.OPEN) {
                   client.send(JSON.stringify({
                     type: 'SLOT_UPDATED',
-                    doctorId: data.doctorId,
-                    date: data.date,
-                    time: data.time,
+                    doctorId,
+                    date,
+                    time,
                     available: true
                   }));
                 }
               });
-              break;
-              
-            default:
-              console.log('Unknown message type:', data.type);
+            }
           }
+          
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+          console.error('Error processing WebSocket message:', error);
         }
       });
       
       ws.on('close', () => {
-        console.log('Client disconnected from WebSocket');
+        console.log('WebSocket client disconnected');
       });
-    });
-    
-    const PORT = 3001;
-    server.listen(PORT, () => {
-      console.log(`WebSocket server is listening on port ${PORT}`);
     });
   }
   
   return wss;
 }
 
+// Endpoint para inicializar o WebSocket
 export async function GET(request: NextRequest) {
-  // This is just a placeholder - the actual WebSocket connection is handled by the external server
+  // Garantir que o servidor WebSocket está rodando
   getWebSocketServer();
   
-  // The WebSocket communication is handled outside of this route handler
-  const upgradeHeader = request.headers.get('upgrade');
-  if (upgradeHeader !== 'websocket') {
-    return new Response('Expected Upgrade to websocket', { status: 426 });
-  }
-  
-  return new Response('WebSocket server is running');
+  // Retornar status OK
+  return NextResponse.json({ status: 'WebSocket server running' });
 }

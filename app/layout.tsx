@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import './globals.css';
+import { WebSocketProvider } from './api/ws/websocket-provider';
 
 export const metadata: Metadata = {
   title: 'SoSaude.cv - Agendamento Médico em Cabo Verde',
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body>
-        {children}
+        <WebSocketProvider>
+          {children}
+        </WebSocketProvider>
       </body>
     </html>
   );

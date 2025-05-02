@@ -1,28 +1,10 @@
-'use client';
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import Navigation from "./components/navigation";
-import SearchFilters from "./components/search-filters";
+import HomeClient from "./components/home-client";
 import { Card, CardContent } from "./components/ui/card";
 import { Clock, Smartphone, CalendarCheck } from "lucide-react";
 
 export default function Home() {
-  const handleSearch = (filters: any) => {
-    console.log("Search filters:", filters);
-  };
-
-  // Inicializar o WebSocket quando a página carrega
-  useEffect(() => {
-    // Inicializar o servidor WebSocket fazendo uma requisição GET para a rota
-    fetch('/api/ws')
-      .then(response => {
-        console.log('WebSocket API initialized:', response.status);
-      })
-      .catch(error => {
-        console.error('Error initializing WebSocket API:', error);
-      });
-  }, []);
-
   return (
     <div className="min-h-screen relative">
       {/* Background Image with Overlay */}
@@ -52,7 +34,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-4 md:px-0">
             <Card className="shadow-2xl backdrop-blur-lg bg-white/95 w-full">
               <CardContent className="p-0">
-                <SearchFilters onSearch={handleSearch} />
+                <HomeClient />
               </CardContent>
             </Card>
           </div>
