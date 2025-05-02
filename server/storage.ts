@@ -1,4 +1,17 @@
-import { appointments, type Appointment, type InsertAppointment } from "@shared/schema";
+// Define our own types instead of importing
+export type Appointment = {
+  id: number;
+  patientName: string;
+  email: string;
+  phone: string;
+  specialty: string;
+  location: string;
+  provider: string;
+  date: Date;
+  status: string;
+};
+
+export type InsertAppointment = Omit<Appointment, "id" | "status">;
 
 export interface IStorage {
   createAppointment(appointment: InsertAppointment): Promise<Appointment>;

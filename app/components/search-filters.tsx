@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Button } from "./ui/button";
@@ -33,11 +33,12 @@ export default function SearchFilters({ onSearch }: SearchFiltersProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto ">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-semibold">Pesquise pelo Médico</h2>
         <p className="text-gray-600 mt-2">
-          Digite o nome do profissional ou escolha uma especialidade. Filtre por localização para encontrar os médicos mais próximos.
+          Digite o nome do profissional ou escolha uma especialidade. Filtre por
+          localização para encontrar os médicos mais próximos.
         </p>
       </div>
 
@@ -63,9 +64,11 @@ export default function SearchFilters({ onSearch }: SearchFiltersProps) {
 
         {/* Date Selection */}
         <div>
-          <h3 className="text-sm font-medium mb-2">Escolha a Data da Consulta</h3>
+          <h3 className="text-sm font-medium mb-2">
+            Escolha a Data da Consulta
+          </h3>
           <div className="p-2 border rounded-md inline-block">
-            <DateSelector 
+            <DateSelector
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
             />
@@ -74,7 +77,9 @@ export default function SearchFilters({ onSearch }: SearchFiltersProps) {
 
         {/* Specialties */}
         <div>
-          <h3 className="text-sm font-medium mb-2">Especialidades em Destaque:</h3>
+          <h3 className="text-sm font-medium mb-2">
+            Especialidades em Destaque:
+          </h3>
           <div className="flex flex-wrap gap-2">
             {specialties.map((spec) => (
               <Button
@@ -94,14 +99,16 @@ export default function SearchFilters({ onSearch }: SearchFiltersProps) {
         </div>
 
         {/* Search Button */}
-        <Button 
+        <Button
           className="w-full md:w-auto h-12 px-8"
-          onClick={() => onSearch({
-            doctorName,
-            specialty,
-            location,
-            date: selectedDate
-          })}
+          onClick={() =>
+            onSearch({
+              doctorName,
+              specialty,
+              location,
+              date: selectedDate,
+            })
+          }
         >
           <Search className="w-5 h-5 mr-2" />
           Buscar Médicos Disponíveis
