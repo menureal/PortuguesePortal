@@ -2,9 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   // Configurações adicionais
-  experimental: {
-    serverComponentsExternalPackages: ['ws'],
-  },
+  serverExternalPackages: ['ws'],
 };
 
 export default nextConfig;

@@ -33,8 +33,10 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
         // Se a inicialização for bem-sucedida, criar a conexão WebSocket
         if (response.ok) {
           const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-          const wsUrl = `${protocol}//${window.location.host}/api/ws`;
+          const host = window.location.hostname;
+          const wsUrl = `${protocol}//${host}:5001`;
           
+          console.log('Connecting to WebSocket server at:', wsUrl);
           const ws = new WebSocket(wsUrl);
           
           ws.onopen = () => {
